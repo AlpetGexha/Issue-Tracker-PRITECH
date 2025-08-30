@@ -70,4 +70,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class)->withPivot('role')->withTimestamps();
+    }
+
+    public function ownedProjects(): BelongsToMany
+    {
+        return $this->projects()->wherePivot('role', 'owner');
+    }
+
+    public function collaboratedProjects(): BelongsToMany
+    {
+        return $this->projects()->wherePivot('role', 'collaborator');
+    }
 }
