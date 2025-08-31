@@ -6,6 +6,7 @@ namespace App\Livewire\Tags;
 
 use App\Models\Tag;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -13,6 +14,7 @@ use Livewire\WithPagination;
 
 #[Layout('components.layouts.app')]
 #[Title('Tags Management')]
+#[Lazy]
 final class TagList extends Component
 {
     use WithPagination;
@@ -32,6 +34,11 @@ final class TagList extends Component
     // Edit tag form
     public string $editName = '';
     public string $editColor = '#3B82F6';
+
+    public function placeholder()
+    {
+        return view('skeletons.tag-list');
+    }
 
     public function updatedSearch(): void
     {

@@ -9,9 +9,11 @@ use App\Enums\ProjectStatus;
 use App\Models\Issue;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 
 #[Layout('components.layouts.app')]
+#[Lazy]
 final class IssueDetail extends Component
 {
     use AuthorizesRequests;
@@ -29,6 +31,11 @@ final class IssueDetail extends Component
     public function mount(Issue $issue): void
     {
         $this->issue = $issue->load(['project', 'tags', 'users', 'comments.user']);
+    }
+
+    public function placeholder()
+    {
+        return view('skeletons.issue-detail');
     }
 
     public function title(): string

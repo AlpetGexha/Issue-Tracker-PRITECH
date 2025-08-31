@@ -13,6 +13,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -20,6 +21,7 @@ use Livewire\WithPagination;
 
 #[Layout('components.layouts.app')]
 #[Title('Project Details')]
+#[Lazy]
 final class ProjectDetail extends Component
 {
     use AuthorizesRequests, WithPagination;
@@ -57,6 +59,11 @@ final class ProjectDetail extends Component
     public function mount(Project $project): void
     {
         $this->project = $project;
+    }
+
+    public function placeholder()
+    {
+        return view('skeletons.project-detail');
     }
 
     public function updatedSearch(): void
@@ -282,6 +289,9 @@ final class ProjectDetail extends Component
 
     public function render()
     {
+        // Simulate loading delay for demonstration (remove in production)
+        sleep(1);
+
         $issues = $this->project->issues()
             ->with(['tags', 'users'])
             ->search($this->search)

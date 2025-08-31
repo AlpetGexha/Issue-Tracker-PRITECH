@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -18,6 +19,7 @@ use Livewire\WithPagination;
 
 #[Layout('components.layouts.app')]
 #[Title('Project List')]
+#[Lazy]
 final class ProjectList extends Component
 {
     use AuthorizesRequests;
@@ -50,6 +52,11 @@ final class ProjectList extends Component
     public function refresh(): void
     {
         // This will force Livewire to run render() again
+    }
+
+    public function placeholder()
+    {
+        return view('skeletons.project-list');
     }
 
     public function updatedSearch(): void
@@ -176,6 +183,9 @@ final class ProjectList extends Component
 
     public function render()
     {
+        // Simulate loading delay for demonstration (remove in production)
+        sleep(1);
+
         $projects = Project::query()
             ->search($this->search)
             ->with('owners')

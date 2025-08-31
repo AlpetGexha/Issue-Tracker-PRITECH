@@ -8,9 +8,11 @@ use App\Models\Comment;
 use App\Models\Issue;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;
 
+#[Lazy]
 final class CommentList extends Component
 {
     use AuthorizesRequests, WithPagination;
@@ -21,6 +23,11 @@ final class CommentList extends Component
     public function mount(Issue $issue): void
     {
         $this->issue = $issue;
+    }
+
+    public function placeholder()
+    {
+        return view('skeletons.comment-list');
     }
 
     public function addComment()

@@ -9,15 +9,25 @@ use App\Models\Issue;
 use App\Models\Project;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
 #[Layout('components.layouts.app')]
 #[Title('Dashboard')]
+#[Lazy]
 final class Dashboard extends Component
 {
+    public function placeholder()
+    {
+        return view('skeletons.dashboard');
+    }
+
     public function render()
     {
+        // Simulate loading delay for demonstration (remove in production)
+        sleep(1);
+
         $user = Auth::user();
 
         // Get recent activities

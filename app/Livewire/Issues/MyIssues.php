@@ -8,6 +8,7 @@ use App\Models\Issue;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -15,6 +16,7 @@ use Livewire\WithPagination;
 
 #[Layout('components.layouts.app')]
 #[Title('My Issues')]
+#[Lazy]
 final class MyIssues extends Component
 {
     use AuthorizesRequests, WithPagination;
@@ -27,6 +29,11 @@ final class MyIssues extends Component
 
     #[Url]
     public string $priorityFilter = '';
+
+    public function placeholder()
+    {
+        return view('skeletons.my-issues');
+    }
 
     public function updatedSearch(): void
     {
