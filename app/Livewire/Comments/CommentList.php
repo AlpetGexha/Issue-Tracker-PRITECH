@@ -7,7 +7,6 @@ namespace App\Livewire\Comments;
 use App\Models\Comment;
 use App\Models\Issue;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Lazy;
 use Livewire\Component;
 use Livewire\WithPagination;

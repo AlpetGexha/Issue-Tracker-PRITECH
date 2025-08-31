@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Pages\Auth;
+
 use Filament\Auth\Pages\Login;
 use Filament\Schemas\Schema;
-class LoginPage extends Login
+
+final class LoginPage extends Login
 {
-     public function mount(): void
+    public function mount(): void
     {
         $this->form->fill([
             'email' => 'user@example.com',

@@ -4,7 +4,7 @@
             <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-1/4 animate-pulse"></div>
             <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-16 animate-pulse"></div>
         </div>
-        
+
         {{-- Comments Skeleton --}}
         <div class="space-y-4">
             @for ($i = 0; $i < 3; $i++)
