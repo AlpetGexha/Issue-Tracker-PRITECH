@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\Issues\IssueDetail;
+use App\Livewire\Issues\MyIssues;
 use App\Livewire\Project\ProjectDetail;
 use App\Livewire\Project\ProjectList;
 use App\Livewire\Settings\Appearance;
@@ -28,6 +30,10 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/projects', ProjectList::class)->name('project.index');
     Route::get('/projects/{project}', ProjectDetail::class)->name('project.detail');
+
+    Route::get('/issues/{issue}', IssueDetail::class)->name('issues.detail');
+    Route::get('/my-issues', MyIssues::class)->name('issues.my');
+
     Route::get('/tags', TagList::class)->name('tags.index');
 });
 
