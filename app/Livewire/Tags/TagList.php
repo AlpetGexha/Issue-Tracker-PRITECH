@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Tags;
 
+use App\Livewire\Forms\TagForm;
 use App\Models\Tag;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Lazy;
@@ -27,13 +28,9 @@ final class TagList extends Component
     public bool $showEditModal = false;
     public ?Tag $selectedTag = null;
 
-    // Create tag form
-    public string $name = '';
-    public string $color = '#3B82F6';
-
-    // Edit tag form
-    public string $editName = '';
-    public string $editColor = '#3B82F6';
+    // Forms
+    public TagForm $createForm;
+    public TagForm $editForm;
 
     public function placeholder()
     {
@@ -47,21 +44,20 @@ final class TagList extends Component
 
     public function openCreateModal(): void
     {
-        $this->resetCreateForm();
+        $this->createForm->resetToDefaults();
         $this->showCreateModal = true;
     }
 
     public function closeCreateModal(): void
     {
         $this->showCreateModal = false;
-        $this->resetCreateForm();
+        $this->createForm->resetToDefaults();
     }
 
     public function openEditModal(Tag $tag): void
     {
         $this->selectedTag = $tag;
-        $this->editName = $tag->name;
-        $this->editColor = $tag->color;
+        $this->editForm->setTag($tag);
         $this->showEditModal = true;
     }
 
@@ -69,20 +65,12 @@ final class TagList extends Component
     {
         $this->showEditModal = false;
         $this->selectedTag = null;
-        $this->resetEditForm();
+        $this->editForm->resetToDefaults();
     }
 
     public function createTag(): void
     {
-        $this->validate([
-            'name' => 'required|string|max:255|unique:tags,name',
-            'color' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
-        ]);
-
-        Tag::create([
-            'name' => $this->name,
-            'color' => $this->color,
-        ]);
+        $tag = $this->createForm->store();
 
         $this->closeCreateModal();
         $this->dispatch('notify', message: 'Tag created successfully!', type: 'success');
@@ -96,15 +84,7 @@ final class TagList extends Component
             return;
         }
 
-        $this->validate([
-            'editName' => 'required|string|max:255|unique:tags,name,' . $this->selectedTag->id,
-            'editColor' => 'required|string|regex:/^#[0-9A-Fa-f]{6}$/',
-        ]);
-
-        $this->selectedTag->update([
-            'name' => $this->editName,
-            'color' => $this->editColor,
-        ]);
+        $this->editForm->update();
 
         $this->closeEditModal();
         $this->dispatch('notify', message: 'Tag updated successfully!', type: 'success');
@@ -127,17 +107,5 @@ final class TagList extends Component
             ->paginate(15);
 
         return view('livewire.tags.tag-list', compact('tags'));
-    }
-
-    private function resetCreateForm(): void
-    {
-        $this->name = '';
-        $this->color = '#3B82F6';
-    }
-
-    private function resetEditForm(): void
-    {
-        $this->editName = '';
-        $this->editColor = '#3B82F6';
     }
 }

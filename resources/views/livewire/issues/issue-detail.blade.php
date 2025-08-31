@@ -135,16 +135,16 @@
             <div>
                 <flux:field>
                     <flux:label>Title</flux:label>
-                    <flux:input wire:model="editTitle" placeholder="Enter issue title..." />
-                    <flux:error name="editTitle" />
+                    <flux:input wire:model="editForm.title" placeholder="Enter issue title..." />
+                    <flux:error name="editForm.title" />
                 </flux:field>
             </div>
 
             <div>
                 <flux:field>
                     <flux:label>Description</flux:label>
-                    <flux:textarea wire:model="editDescription" placeholder="Enter issue description..." rows="4" />
-                    <flux:error name="editDescription" />
+                    <flux:textarea wire:model="editForm.description" placeholder="Enter issue description..." rows="4" />
+                    <flux:error name="editForm.description" />
                 </flux:field>
             </div>
 
@@ -152,25 +152,24 @@
                 <div>
                     <flux:field>
                         <flux:label>Status</flux:label>
-                        <flux:select wire:model="editStatus">
+                        <flux:select wire:model="editForm.status">
                             <flux:select.option value="open">Open</flux:select.option>
                             <flux:select.option value="in_progress">In Progress</flux:select.option>
                             <flux:select.option value="closed">Closed</flux:select.option>
                         </flux:select>
-                        <flux:error name="editStatus" />
+                        <flux:error name="editForm.status" />
                     </flux:field>
                 </div>
 
                 <div>
                     <flux:field>
                         <flux:label>Priority</flux:label>
-                        <flux:select wire:model="editPriority">
+                        <flux:select wire:model="editForm.priority">
                             <flux:select.option value="low">Low</flux:select.option>
                             <flux:select.option value="medium">Medium</flux:select.option>
                             <flux:select.option value="high">High</flux:select.option>
-                            <flux:select.option value="critical">Critical</flux:select.option>
                         </flux:select>
-                        <flux:error name="editPriority" />
+                        <flux:error name="editForm.priority" />
                     </flux:field>
                 </div>
             </div>
@@ -178,8 +177,8 @@
             <div>
                 <flux:field>
                     <flux:label>Due Date (Optional)</flux:label>
-                    <flux:input type="date" wire:model="editDueDate" />
-                    <flux:error name="editDueDate" />
+                    <flux:input type="date" wire:model="editForm.dueDate" />
+                    <flux:error name="editForm.dueDate" />
                 </flux:field>
             </div>
         </div>

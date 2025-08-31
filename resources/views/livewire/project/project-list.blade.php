@@ -122,44 +122,44 @@
                 <!-- Project Name -->
                 <flux:field>
                     <flux:label>Project Name</flux:label>
-                    <flux:input wire:model="name" placeholder="Enter project name" />
-                    <flux:error name="name" />
+                    <flux:input wire:model="createForm.name" placeholder="Enter project name" />
+                    <flux:error name="createForm.name" />
                 </flux:field>
 
                 <!-- Project Description -->
                 <flux:field>
                     <flux:label>Description</flux:label>
-                    <flux:textarea wire:model="description" placeholder="Enter project description (optional)" rows="3" />
-                    <flux:error name="description" />
+                    <flux:textarea wire:model="createForm.description" placeholder="Enter project description" rows="3" />
+                    <flux:error name="createForm.description" />
                 </flux:field>
 
                 <!-- Start Date -->
                 <flux:field>
                     <flux:label>Start Date</flux:label>
-                    <flux:input type="date" wire:model="startDate" />
-                    <flux:error name="startDate" />
+                    <flux:input type="date" wire:model="createForm.startDate" />
+                    <flux:error name="createForm.startDate" />
                 </flux:field>
 
                 <!-- Deadline -->
                 <flux:field>
                     <flux:label>Deadline</flux:label>
-                    <flux:input type="date" wire:model="deadline" />
-                    <flux:error name="deadline" />
+                    <flux:input type="date" wire:model="createForm.deadline" />
+                    <flux:error name="createForm.deadline" />
                 </flux:field>
 
                 <!-- Project Owners -->
                 <flux:field>
                     <flux:label>Project Owners</flux:label>
                     <flux:input
-                        wire:model.live.debounce.300ms="ownerSearch"
+                        wire:model.live.debounce.300ms="createForm.ownerSearch"
                         placeholder="Search users by name or email..."
                     />
-                    <flux:error name="selectedOwners" />
+                    <flux:error name="createForm.selectedOwners" />
 
                     <!-- Selected Owners -->
-                    @if (!empty($selectedOwners))
+                    @if (!empty($createForm->selectedOwners))
                         <div class="mt-2 space-y-1">
-                            @foreach ($selectedOwners as $userId)
+                            @foreach ($createForm->selectedOwners as $userId)
                                 @php
                                     $user = $createUsers->firstWhere('id', $userId) ?? \App\Models\User::find($userId);
                                 @endphp
@@ -167,7 +167,8 @@
                                     <div class="flex items-center justify-between bg-blue-50 dark:bg-blue-900/20 px-3 py-2 rounded-md">
                                         <span class="text-sm text-blue-700 dark:text-blue-300">{{ $user->name }}</span>
                                         <flux:button
-                                            wire:click="removeOwner({{ $userId }})"
+                                            type="button"
+                                            wire:click="removeCreateOwner({{ $userId }})"
                                             icon="x-mark"
                                             variant="ghost"
                                             size="xs"
@@ -179,13 +180,13 @@
                     @endif
 
                     <!-- User Search Results -->
-                    @if ($ownerSearch && $createUsers->isNotEmpty())
+                    @if ($createForm->ownerSearch && $createUsers->isNotEmpty())
                         <div class="mt-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md">
                             @foreach ($createUsers as $user)
-                                @if (!in_array($user->id, $selectedOwners))
+                                @if (!in_array($user->id, $createForm->selectedOwners))
                                     <button
                                         type="button"
-                                        wire:click="addOwner({{ $user->id }})"
+                                        wire:click="addCreateOwner({{ $user->id }})"
                                         class="w-full text-left px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-800 border-b border-gray-100 dark:border-gray-700 last:border-0"
                                     >
                                         <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $user->name }}</div>
@@ -222,44 +223,44 @@
                 <!-- Project Name -->
                 <flux:field>
                     <flux:label>Project Name</flux:label>
-                    <flux:input wire:model="editName" placeholder="Enter project name" />
-                    <flux:error name="editName" />
+                    <flux:input wire:model="editForm.name" placeholder="Enter project name" />
+                    <flux:error name="editForm.name" />
                 </flux:field>
 
                 <!-- Project Description -->
                 <flux:field>
                     <flux:label>Description</flux:label>
-                    <flux:textarea wire:model="editDescription" placeholder="Enter project description (optional)" rows="3" />
-                    <flux:error name="editDescription" />
+                    <flux:textarea wire:model="editForm.description" placeholder="Enter project description" rows="3" />
+                    <flux:error name="editForm.description" />
                 </flux:field>
 
                 <!-- Start Date -->
                 <flux:field>
                     <flux:label>Start Date</flux:label>
-                    <flux:input type="date" wire:model="editStartDate" />
-                    <flux:error name="editStartDate" />
+                    <flux:input type="date" wire:model="editForm.startDate" />
+                    <flux:error name="editForm.startDate" />
                 </flux:field>
 
                 <!-- Deadline -->
                 <flux:field>
                     <flux:label>Deadline</flux:label>
-                    <flux:input type="date" wire:model="editDeadline" />
-                    <flux:error name="editDeadline" />
+                    <flux:input type="date" wire:model="editForm.deadline" />
+                    <flux:error name="editForm.deadline" />
                 </flux:field>
 
                 <!-- Project Owners -->
                 <flux:field>
                     <flux:label>Project Owners</flux:label>
                     <flux:input
-                        wire:model.live.debounce.300ms="editOwnerSearch"
+                        wire:model.live.debounce.300ms="editForm.ownerSearch"
                         placeholder="Search users by name or email..."
                     />
-                    <flux:error name="editSelectedOwners" />
+                    <flux:error name="editForm.selectedOwners" />
 
                     <!-- Selected Owners -->
-                    @if (!empty($editSelectedOwners))
+                    @if (!empty($editForm->selectedOwners))
                         <div class="mt-2 space-y-1">
-                            @foreach ($editSelectedOwners as $userId)
+                            @foreach ($editForm->selectedOwners as $userId)
                                 @php
                                     $user = $editUsers->firstWhere('id', $userId) ?? \App\Models\User::find($userId);
                                 @endphp
@@ -267,6 +268,7 @@
                                     <div class="flex items-center justify-between bg-blue-50 dark:bg-blue-900/20 px-3 py-2 rounded-md">
                                         <span class="text-sm text-blue-700 dark:text-blue-300">{{ $user->name }}</span>
                                         <flux:button
+                                            type="button"
                                             wire:click="removeEditOwner({{ $userId }})"
                                             icon="x-mark"
                                             variant="ghost"
@@ -279,10 +281,10 @@
                     @endif
 
                     <!-- User Search Results -->
-                    @if ($editOwnerSearch && $editUsers->isNotEmpty())
+                    @if ($editForm->ownerSearch && $editUsers->isNotEmpty())
                         <div class="mt-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md">
                             @foreach ($editUsers as $user)
-                                @if (!in_array($user->id, $editSelectedOwners))
+                                @if (!in_array($user->id, $editForm->selectedOwners))
                                     <button
                                         type="button"
                                         wire:click="addEditOwner({{ $user->id }})"

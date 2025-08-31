@@ -128,8 +128,8 @@
             <div class="space-y-4">
                 <flux:field>
                     <flux:label>Tag Name</flux:label>
-                    <flux:input wire:model="name" placeholder="Enter tag name" />
-                    <flux:error name="name" />
+                    <flux:input wire:model="createForm.name" placeholder="Enter tag name" />
+                    <flux:error name="createForm.name" />
                 </flux:field>
 
                 <flux:field>
@@ -137,12 +137,12 @@
                     <div class="flex items-center space-x-3">
                         <input
                             type="color"
-                            wire:model.live="color"
+                            wire:model.live="createForm.color"
                             class="w-12 h-10 rounded border border-gray-300 dark:border-gray-600"
                         />
-                        <flux:input wire:model="color" placeholder="#3B82F6" class="flex-1" />
+                        <flux:input wire:model="createForm.color" placeholder="#3B82F6" class="flex-1" />
                     </div>
-                    <flux:error name="color" />
+                    <flux:error name="createForm.color" />
                 </flux:field>
 
                 {{-- Preview --}}
@@ -150,8 +150,8 @@
                     <flux:label>Preview</flux:label>
                     <div class="mt-2">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white"
-                              style="background-color: {{ $color }}">
-                            {{ $name ?: 'Tag Name' }}
+                              style="background-color: {{ $createForm->color }}">
+                            {{ $createForm->name ?: 'Tag Name' }}
                         </span>
                     </div>
                 </div>
@@ -175,8 +175,8 @@
             <div class="space-y-4">
                 <flux:field>
                     <flux:label>Tag Name</flux:label>
-                    <flux:input wire:model="editName" placeholder="Enter tag name" />
-                    <flux:error name="editName" />
+                    <flux:input wire:model="editForm.name" placeholder="Enter tag name" />
+                    <flux:error name="editForm.name" />
                 </flux:field>
 
                 <flux:field>
@@ -184,12 +184,12 @@
                     <div class="flex items-center space-x-3">
                         <input
                             type="color"
-                            wire:model.live="editColor"
+                            wire:model.live="editForm.color"
                             class="w-12 h-10 rounded border border-gray-300 dark:border-gray-600"
                         />
-                        <flux:input wire:model="editColor" placeholder="#3B82F6" class="flex-1" />
+                        <flux:input wire:model="editForm.color" placeholder="#3B82F6" class="flex-1" />
                     </div>
-                    <flux:error name="editColor" />
+                    <flux:error name="editForm.color" />
                 </flux:field>
 
                 {{-- Preview --}}
@@ -197,8 +197,8 @@
                     <flux:label>Preview</flux:label>
                     <div class="mt-2">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white"
-                              style="background-color: {{ $editColor }}">
-                            {{ $editName ?: 'Tag Name' }}
+                              style="background-color: {{ $editForm->color }}">
+                            {{ $editForm->name ?: 'Tag Name' }}
                         </span>
                     </div>
                 </div>

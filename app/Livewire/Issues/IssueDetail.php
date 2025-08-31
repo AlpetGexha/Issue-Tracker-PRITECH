@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Issues;
 
-use App\Enums\ProjectPriority;
-use App\Enums\ProjectStatus;
+use App\Livewire\Forms\IssueForm;
 use App\Models\Issue;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Attributes\Layout;
@@ -22,11 +21,7 @@ final class IssueDetail extends Component
 
     // Edit Modal Properties
     public bool $showEditModal = false;
-    public string $editTitle = '';
-    public string $editDescription = '';
-    public string $editStatus = '';
-    public string $editPriority = '';
-    public string $editDueDate = '';
+    public IssueForm $editForm;
 
     public function mount(Issue $issue): void
     {
@@ -45,37 +40,19 @@ final class IssueDetail extends Component
 
     public function openEditModal(): void
     {
-        $this->editTitle = $this->issue->title;
-        $this->editDescription = $this->issue->description ?? '';
-        $this->editStatus = $this->issue->status->value;
-        $this->editPriority = $this->issue->priority->value;
-        $this->editDueDate = $this->issue->due_date ? $this->issue->due_date->format('Y-m-d') : '';
+        $this->editForm->setIssue($this->issue);
         $this->showEditModal = true;
     }
 
     public function closeEditModal(): void
     {
         $this->showEditModal = false;
-        $this->reset(['editTitle', 'editDescription', 'editStatus', 'editPriority', 'editDueDate']);
+        $this->editForm->reset();
     }
 
     public function updateIssue(): void
     {
-        $this->validate([
-            'editTitle' => 'required|string|max:255',
-            'editDescription' => 'nullable|string',
-            'editStatus' => 'required|string',
-            'editPriority' => 'required|string',
-            'editDueDate' => 'nullable|date',
-        ]);
-
-        $this->issue->update([
-            'title' => $this->editTitle,
-            'description' => $this->editDescription,
-            'status' => ProjectStatus::from($this->editStatus),
-            'priority' => ProjectPriority::from($this->editPriority),
-            'due_date' => $this->editDueDate ?: null,
-        ]);
+        $this->editForm->update();
 
         $this->closeEditModal();
 
@@ -107,7 +84,7 @@ final class IssueDetail extends Component
         session()->flash('success', "Issue '{$issueTitle}' deleted successfully!");
 
         // Redirect to project detail page
-        return redirect()->route('projects.detail', $projectId);
+        return redirect()->route('project.detail', $projectId);
     }
 
     public function render()

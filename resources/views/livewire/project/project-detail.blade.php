@@ -299,7 +299,7 @@
                 <div class="space-y-4">
                     <div>
                         <flux:input
-                            wire:model="newIssueTitle"
+                            wire:model="createForm.title"
                             label="Title"
                             placeholder="Enter issue title..."
                             required
@@ -308,7 +308,7 @@
 
                     <div>
                         <flux:textarea
-                            wire:model="newIssueDescription"
+                            wire:model="createForm.description"
                             label="Description"
                             placeholder="Describe the issue..."
                             rows="4"
@@ -318,7 +318,7 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <flux:select wire:model="newIssueStatus" label="Status">
+                            <flux:select wire:model="createForm.status" label="Status">
                                 <option value="open">Open</option>
                                 <option value="in_progress">In Progress</option>
                                 <option value="closed">Closed</option>
@@ -326,7 +326,7 @@
                         </div>
 
                         <div>
-                            <flux:select wire:model="newIssuePriority" label="Priority">
+                            <flux:select wire:model="createForm.priority" label="Priority">
                                 <option value="low">Low</option>
                                 <option value="medium">Medium</option>
                                 <option value="high">High</option>
@@ -336,7 +336,7 @@
 
                     <div>
                         <flux:input
-                            wire:model="newIssueDueDate"
+                            wire:model="createForm.dueDate"
                             label="Due Date"
                             type="date"
                         />
@@ -367,7 +367,7 @@
                 <div class="space-y-4">
                     <div>
                         <flux:input
-                            wire:model="editIssueTitle"
+                            wire:model="editForm.title"
                             label="Title"
                             placeholder="Issue title..."
                             required
@@ -376,7 +376,7 @@
 
                     <div>
                         <flux:textarea
-                            wire:model="editIssueDescription"
+                            wire:model="editForm.description"
                             label="Description"
                             placeholder="Describe the issue..."
                             rows="4"
@@ -386,7 +386,7 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <flux:select wire:model="editIssueStatus" label="Status">
+                            <flux:select wire:model="editForm.status" label="Status">
                                 <option value="open">Open</option>
                                 <option value="in_progress">In Progress</option>
                                 <option value="closed">Closed</option>
@@ -394,7 +394,7 @@
                         </div>
 
                         <div>
-                            <flux:select wire:model="editIssuePriority" label="Priority">
+                            <flux:select wire:model="editForm.priority" label="Priority">
                                 <option value="low">Low</option>
                                 <option value="medium">Medium</option>
                                 <option value="high">High</option>
@@ -404,7 +404,7 @@
 
                     <div>
                         <flux:input
-                            wire:model="editIssueDueDate"
+                            wire:model="editForm.dueDate"
                             label="Due Date"
                             type="date"
                         />

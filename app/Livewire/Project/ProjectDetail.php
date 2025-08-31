@@ -6,6 +6,7 @@ namespace App\Livewire\Project;
 
 use App\Enums\ProjectPriority;
 use App\Enums\ProjectStatus;
+use App\Livewire\Forms\IssueForm;
 use App\Models\Issue;
 use App\Models\Project;
 use App\Models\Tag;
@@ -42,23 +43,16 @@ final class ProjectDetail extends Component
     public array $selectedUsers = [];
     public string $userSearch = '';
 
-    // Create issue form
-    public string $newIssueTitle = '';
-    public string $newIssueDescription = '';
-    public string $newIssueStatus = 'open';
-    public string $newIssuePriority = 'medium';
-    public string $newIssueDueDate = '';
-
-    // Edit issue form
-    public string $editIssueTitle = '';
-    public string $editIssueDescription = '';
-    public string $editIssueStatus = '';
-    public string $editIssuePriority = '';
-    public string $editIssueDueDate = '';
+    // Forms
+    public IssueForm $createForm;
+    public IssueForm $editForm;
 
     public function mount(Project $project): void
     {
         $this->project = $project;
+
+        // Set project for the create form
+        $this->createForm->setProject($project);
     }
 
     public function placeholder()
@@ -163,42 +157,26 @@ final class ProjectDetail extends Component
 
     public function openCreateIssueModal(): void
     {
-        $this->resetCreateIssueForm();
+        $this->createForm->reset();
+        $this->createForm->setProject($this->project);
         $this->showCreateIssueModal = true;
     }
 
     public function closeCreateIssueModal(): void
     {
         $this->showCreateIssueModal = false;
-        $this->resetCreateIssueForm();
+        $this->createForm->reset();
     }
 
     public function resetCreateIssueForm(): void
     {
-        $this->newIssueTitle = '';
-        $this->newIssueDescription = '';
-        $this->newIssueStatus = 'open';
-        $this->newIssuePriority = 'medium';
-        $this->newIssueDueDate = '';
+        $this->createForm->reset();
+        $this->createForm->setProject($this->project);
     }
 
     public function createIssue(): void
     {
-        $this->validate([
-            'newIssueTitle' => 'required|string|max:255',
-            'newIssueDescription' => 'required|string',
-            'newIssueStatus' => 'required|in:open,in_progress,closed',
-            'newIssuePriority' => 'required|in:low,medium,high',
-            'newIssueDueDate' => 'nullable|date|after:today',
-        ]);
-
-        $issue = $this->project->issues()->create([
-            'title' => $this->newIssueTitle,
-            'description' => $this->newIssueDescription,
-            'status' => $this->newIssueStatus,
-            'priority' => $this->newIssuePriority,
-            'due_date' => $this->newIssueDueDate ?: null,
-        ]);
+        $issue = $this->createForm->store();
 
         $this->closeCreateIssueModal();
         $this->dispatch('issue-created', issueId: $issue->id);
@@ -211,11 +189,7 @@ final class ProjectDetail extends Component
         }
 
         $this->selectedIssue = $issue;
-        $this->editIssueTitle = $issue->title ?? '';
-        $this->editIssueDescription = $issue->description ?? '';
-        $this->editIssueStatus = $issue->status ? $issue->status->value : 'open';
-        $this->editIssuePriority = $issue->priority ? $issue->priority->value : 'medium';
-        $this->editIssueDueDate = $issue->due_date ? (string) $issue->due_date : '';
+        $this->editForm->setIssue($issue);
         $this->showEditIssueModal = true;
     }
 
@@ -223,16 +197,12 @@ final class ProjectDetail extends Component
     {
         $this->showEditIssueModal = false;
         $this->selectedIssue = null;
-        $this->resetEditIssueForm();
+        $this->editForm->reset();
     }
 
     public function resetEditIssueForm(): void
     {
-        $this->editIssueTitle = '';
-        $this->editIssueDescription = '';
-        $this->editIssueStatus = '';
-        $this->editIssuePriority = '';
-        $this->editIssueDueDate = '';
+        $this->editForm->reset();
     }
 
     public function deleteIssue(Issue $issue): void
@@ -252,29 +222,14 @@ final class ProjectDetail extends Component
             return;
         }
 
-        $this->validate([
-            'editIssueTitle' => 'required|string|max:255',
-            'editIssueDescription' => 'required|string',
-            'editIssueStatus' => 'required|in:open,in_progress,closed',
-            'editIssuePriority' => 'required|in:low,medium,high',
-            'editIssueDueDate' => 'nullable|date',
-        ]);
-
         try {
             $issueId = $this->selectedIssue->id;
-            $this->selectedIssue->update([
-                'title' => $this->editIssueTitle,
-                'description' => $this->editIssueDescription,
-                'status' => $this->editIssueStatus,
-                'priority' => $this->editIssuePriority,
-                'due_date' => $this->editIssueDueDate ?: null,
-            ]);
+            $this->editForm->update();
 
             $this->closeEditIssueModal();
             $this->dispatch('issue-updated', issueId: $issueId);
         } catch (Exception $e) {
             $this->closeEditIssueModal();
-            // Optionally log the error or show a user message
         }
     }
 
@@ -300,7 +255,6 @@ final class ProjectDetail extends Component
 
         $tags = Tag::all();
 
-        // Only search users when the user modal is open to improve performance
         $users = $this->showUserModal
             ? User::query()
                 ->search($this->userSearch)
