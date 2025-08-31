@@ -119,7 +119,6 @@ final class ViewIssue extends ViewRecord
                                 ->action(function (array $data): void {
                                     $this->record->comments()->create([
                                         'body' => $data['body'],
-                                        'user_id' => Auth::id(),
                                     ]);
 
                                     Notification::make()

@@ -39,12 +39,10 @@ final class CommentList extends Component
         Comment::create([
             'body' => $this->newComment,
             'issue_id' => $this->issue->id,
-            'user_id' => Auth::id(),
         ]);
 
         $this->newComment = '';
 
-        // Reset to first page to show the new comment
         $this->resetPage();
 
         session()->flash('success', 'Comment added successfully!');

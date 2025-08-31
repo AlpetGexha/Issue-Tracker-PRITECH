@@ -68,9 +68,9 @@ final class ProjectList extends Component
     {
         $this->resetCreateForm();
         $this->showCreateModal = true;
-        // Add current user as default owner
-        if (Auth::id()) {
-            $this->selectedOwners = [Auth::id()];
+
+        if (auth()->id()) {
+            $this->selectedOwners = [auth()->id()];
         }
     }
 
