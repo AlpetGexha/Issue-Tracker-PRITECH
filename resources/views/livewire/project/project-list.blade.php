@@ -111,7 +111,7 @@
     @endif
 
     <!-- Create Project Modal -->
-    <flux:modal wire:model.self="showCreateModal" class="md:w-96">
+    <flux:modal wire:model="modals.create" class="md:w-96">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Create New Project</flux:heading>
@@ -212,7 +212,7 @@
     </flux:modal>
 
     <!-- Edit Project Modal -->
-    <flux:modal wire:model.self="showEditModal" class="md:w-96">
+    <flux:modal wire:model="modals.edit" class="md:w-96">
         <div class="space-y-6">
             <div>
                 <flux:heading size="lg">Edit Project</flux:heading>

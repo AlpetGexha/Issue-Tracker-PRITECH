@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Issues;
 
+use App\Livewire\Concerns\WithModalActions;
 use App\Livewire\Forms\IssueForm;
 use App\Models\Issue;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -15,12 +16,9 @@ use Livewire\Component;
 #[Lazy]
 final class IssueDetail extends Component
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests, WithModalActions;
 
     public Issue $issue;
-
-    // Edit Modal Properties
-    public bool $showEditModal = false;
     public IssueForm $editForm;
 
     public function mount(Issue $issue): void
@@ -38,38 +36,24 @@ final class IssueDetail extends Component
         return $this->issue->title;
     }
 
-    public function openEditModal(): void
+    public function setEditForm($item): void
     {
-        $this->editForm->setIssue($this->issue);
-        $this->showEditModal = true;
-    }
-
-    public function closeEditModal(): void
-    {
-        $this->showEditModal = false;
-        $this->editForm->reset();
+        $this->editForm->setIssue($item);
     }
 
     public function updateIssue(): void
     {
         $this->editForm->update();
-
         $this->closeEditModal();
-
-        // Flash success message
-        session()->flash('success', 'Issue updated successfully!');
-
-        // Refresh the issue data
+        $this->notifySuccess('Issue updated successfully!');
         $this->issue->refresh();
     }
 
     public function shareIssue(): void
     {
         $url = route('issues.detail', $this->issue);
-
         $this->dispatch('copy-to-clipboard', text: $url);
-
-        session()->flash('success', 'Issue URL copied to clipboard!');
+        $this->notifySuccess('Issue URL copied to clipboard!');
     }
 
     public function deleteIssue()
@@ -79,12 +63,15 @@ final class IssueDetail extends Component
         $projectId = $this->issue->project_id;
         $issueTitle = $this->issue->title;
 
+        $this->confirmDelete($issueTitle, 'performDelete', [$projectId]);
+    }
+
+    public function performDelete(int $projectId): void
+    {
+        $issueTitle = $this->issue->title;
         $this->issue->delete();
-
-        session()->flash('success', "Issue '{$issueTitle}' deleted successfully!");
-
-        // Redirect to project detail page
-        return redirect()->route('project.detail', $projectId);
+        $this->notifySuccess("Issue '{$issueTitle}' deleted successfully!");
+        $this->redirect(route('project.detail', $projectId), navigate: true);
     }
 
     public function render()

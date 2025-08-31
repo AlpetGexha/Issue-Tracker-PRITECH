@@ -6,6 +6,7 @@ namespace App\Livewire\Project;
 
 use App\Enums\ProjectPriority;
 use App\Enums\ProjectStatus;
+use App\Livewire\Concerns\WithModalActions;
 use App\Livewire\Forms\IssueForm;
 use App\Models\Issue;
 use App\Models\Project;
@@ -25,7 +26,7 @@ use Livewire\WithPagination;
 #[Lazy]
 final class ProjectDetail extends Component
 {
-    use AuthorizesRequests, WithPagination;
+    use AuthorizesRequests, WithModalActions, WithPagination;
 
     public Project $project;
     public string $search = '';
@@ -33,11 +34,7 @@ final class ProjectDetail extends Component
     public string $priorityFilter = '';
     public string $tagFilter = '';
 
-    // Modal state
-    public bool $showTagModal = false;
-    public bool $showUserModal = false;
-    public bool $showCreateIssueModal = false;
-    public bool $showEditIssueModal = false;
+    // Selected items for modals
     public ?Issue $selectedIssue = null;
     public array $selectedTags = [];
     public array $selectedUsers = [];
@@ -82,20 +79,15 @@ final class ProjectDetail extends Component
 
     public function openTagModal(Issue $issue): void
     {
-        if (! $issue->exists) {
-            return;
-        }
-
         $this->selectedIssue = $issue;
         $this->selectedTags = $issue->tags->pluck('id')->toArray();
-        $this->showTagModal = true;
+
+        $this->openModal('tags');
     }
 
     public function closeTagModal(): void
     {
-        $this->showTagModal = false;
-        $this->selectedIssue = null;
-        $this->selectedTags = [];
+        $this->closeModal('tags');
     }
 
     public function updateTags(): void
@@ -110,9 +102,11 @@ final class ProjectDetail extends Component
             $issueId = $this->selectedIssue->id;
             $this->selectedIssue->tags()->sync($this->selectedTags);
             $this->closeTagModal();
+            $this->notifySuccess('Issue tags updated successfully!');
             $this->dispatch('tags-updated', issueId: $issueId);
         } catch (Exception $e) {
             $this->closeTagModal();
+            $this->notifyError('Failed to update tags. Please try again.');
         }
     }
 
@@ -125,12 +119,12 @@ final class ProjectDetail extends Component
         $this->selectedIssue = $issue;
         $this->selectedUsers = $issue->users->pluck('id')->toArray();
         $this->userSearch = '';
-        $this->showUserModal = true;
+        $this->openModal('assignees');
     }
 
     public function closeUserModal(): void
     {
-        $this->showUserModal = false;
+        $this->closeModal('assignees');
         $this->selectedIssue = null;
         $this->selectedUsers = [];
         $this->userSearch = '';
@@ -157,15 +151,13 @@ final class ProjectDetail extends Component
 
     public function openCreateIssueModal(): void
     {
-        $this->createForm->reset();
-        $this->createForm->setProject($this->project);
-        $this->showCreateIssueModal = true;
+        $this->resetCreateForm();
+        $this->openModal('create');
     }
 
     public function closeCreateIssueModal(): void
     {
-        $this->showCreateIssueModal = false;
-        $this->createForm->reset();
+        $this->closeModal('create');
     }
 
     public function resetCreateIssueForm(): void
@@ -179,6 +171,7 @@ final class ProjectDetail extends Component
         $issue = $this->createForm->store();
 
         $this->closeCreateIssueModal();
+        $this->notifySuccess('Issue created successfully!');
         $this->dispatch('issue-created', issueId: $issue->id);
     }
 
@@ -190,12 +183,12 @@ final class ProjectDetail extends Component
 
         $this->selectedIssue = $issue;
         $this->editForm->setIssue($issue);
-        $this->showEditIssueModal = true;
+        $this->openModal('edit');
     }
 
     public function closeEditIssueModal(): void
     {
-        $this->showEditIssueModal = false;
+        $this->closeModal('edit');
         $this->selectedIssue = null;
         $this->editForm->reset();
     }
@@ -227,6 +220,7 @@ final class ProjectDetail extends Component
             $this->editForm->update();
 
             $this->closeEditIssueModal();
+            $this->notifySuccess('Issue updated successfully!');
             $this->dispatch('issue-updated', issueId: $issueId);
         } catch (Exception $e) {
             $this->closeEditIssueModal();
@@ -255,7 +249,7 @@ final class ProjectDetail extends Component
 
         $tags = Tag::all();
 
-        $users = $this->showUserModal
+        $users = $this->isModalOpen('assignees')
             ? User::query()
                 ->search($this->userSearch)
                 ->get()

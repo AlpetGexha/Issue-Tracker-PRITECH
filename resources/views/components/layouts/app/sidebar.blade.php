@@ -120,6 +120,9 @@
 
         {{ $slot }}
 
+        {{-- Toast Notifications --}}
+        <x-toast-notifications />
+
         @fluxScripts
     </body>
 </html>

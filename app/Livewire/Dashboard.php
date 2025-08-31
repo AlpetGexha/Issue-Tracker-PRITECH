@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
+use App\Livewire\Concerns\WithNotifications;
 use App\Models\Comment;
 use App\Models\Issue;
 use App\Models\Project;
@@ -18,9 +19,32 @@ use Livewire\Component;
 #[Lazy]
 final class Dashboard extends Component
 {
+    use WithNotifications;
+
     public function placeholder()
     {
         return view('skeletons.dashboard');
+    }
+
+    // Test notification methods
+    public function testSuccessNotification(): void
+    {
+        $this->notifySuccess('This is a success notification!');
+    }
+
+    public function testErrorNotification(): void
+    {
+        $this->notifyError('This is an error notification!');
+    }
+
+    public function testWarningNotification(): void
+    {
+        $this->notifyWarning('This is a warning notification!');
+    }
+
+    public function testInfoNotification(): void
+    {
+        $this->notifyInfo('This is an info notification!');
     }
 
     public function render()

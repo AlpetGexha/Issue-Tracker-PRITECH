@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Tags;
 
+use App\Livewire\Concerns\WithModalActions;
 use App\Livewire\Forms\TagForm;
 use App\Models\Tag;
 use Livewire\Attributes\Layout;
@@ -18,14 +19,11 @@ use Livewire\WithPagination;
 #[Lazy]
 final class TagList extends Component
 {
-    use WithPagination;
+    use WithModalActions, WithPagination;
 
     #[Url]
     public string $search = '';
 
-    // Modal states
-    public bool $showCreateModal = false;
-    public bool $showEditModal = false;
     public ?Tag $selectedTag = null;
 
     // Forms
@@ -42,38 +40,18 @@ final class TagList extends Component
         $this->resetPage();
     }
 
-    public function openCreateModal(): void
-    {
-        $this->createForm->resetToDefaults();
-        $this->showCreateModal = true;
-    }
-
-    public function closeCreateModal(): void
-    {
-        $this->showCreateModal = false;
-        $this->createForm->resetToDefaults();
-    }
-
-    public function openEditModal(Tag $tag): void
+    // Override trait methods
+    public function setEditForm($tag): void
     {
         $this->selectedTag = $tag;
         $this->editForm->setTag($tag);
-        $this->showEditModal = true;
-    }
-
-    public function closeEditModal(): void
-    {
-        $this->showEditModal = false;
-        $this->selectedTag = null;
-        $this->editForm->resetToDefaults();
     }
 
     public function createTag(): void
     {
-        $tag = $this->createForm->store();
-
+        $this->createForm->store();
         $this->closeCreateModal();
-        $this->dispatch('notify', message: 'Tag created successfully!', type: 'success');
+        $this->notifySuccess('Tag created successfully!');
     }
 
     public function updateTag(): void
@@ -85,15 +63,22 @@ final class TagList extends Component
         }
 
         $this->editForm->update();
-
         $this->closeEditModal();
-        $this->dispatch('notify', message: 'Tag updated successfully!', type: 'success');
+        $this->notifySuccess('Tag updated successfully!');
     }
 
     public function deleteTag(Tag $tag): void
     {
-        $tag->delete();
-        $this->dispatch('notify', message: 'Tag deleted successfully!', type: 'success');
+        $this->confirmDelete($tag->name, 'performDeleteTag', [$tag->id]);
+    }
+
+    public function performDeleteTag(int $tagId): void
+    {
+        $tag = Tag::find($tagId);
+        if ($tag) {
+            $tag->delete();
+            $this->notifySuccess('Tag deleted successfully!');
+        }
     }
 
     public function render()
@@ -107,5 +92,16 @@ final class TagList extends Component
             ->paginate(15);
 
         return view('livewire.tags.tag-list', compact('tags'));
+    }
+
+    protected function resetEditForm(): void
+    {
+        $this->editForm->resetToDefaults();
+        $this->selectedTag = null;
+    }
+
+    protected function resetCreateForm(): void
+    {
+        $this->createForm->resetToDefaults();
     }
 }

@@ -126,7 +126,7 @@
 
     {{-- Edit Modal --}}
         {{-- Edit Modal --}}
-    <flux:modal name="edit-issue" wire:model="showEditModal">
+    <flux:modal name="edit-issue" wire:model="modals.edit">
         <div class="p-6 border-b border-zinc-200 dark:border-zinc-700">
             <flux:heading size="lg">Edit Issue</flux:heading>
         </div>

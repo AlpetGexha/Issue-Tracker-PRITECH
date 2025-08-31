@@ -138,20 +138,20 @@
                     <div class="ml-4 flex flex-col gap-2">
                         @can('update', $issue)
                             <button
-                                wire:click="openEditIssueModal({{ $issue->id }})"
+                                wire:click="openEditIssueModal({{ $issue }})"
                                 class="px-3 py-1 text-sm text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-200 border border-indigo-300 rounded hover:bg-indigo-50 dark:border-indigo-600 dark:hover:bg-indigo-900"
                             >
                                 Edit Issue
                             </button>
                         @endcan
                         <button
-                            wire:click="openTagModal({{ $issue->id }})"
+                            wire:click="openTagModal({{ $issue }})"
                             class="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 border border-blue-300 rounded hover:bg-blue-50 dark:border-blue-600 dark:hover:bg-blue-900"
                         >
                             Manage Tags
                         </button>
                         <button
-                            wire:click="openUserModal({{ $issue->id }})"
+                            wire:click="openUserModal({{ $issue }})"
                             class="px-3 py-1 text-sm text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200 border border-green-300 rounded hover:bg-green-50 dark:border-green-600 dark:hover:bg-green-900"
                         >
                             Assign Users
@@ -189,8 +189,8 @@
     @endif
 
     {{-- Tag Management Modal --}}
-    @if ($showTagModal && $selectedIssue && $selectedIssue->exists)
-        <flux:modal name="tag-modal" wire:model.self="showTagModal">
+    @if ($this->isModalOpen('tags') && $selectedIssue && $selectedIssue->exists)
+        <flux:modal name="tag-modal" wire:model="modals.tags">
             <div class="space-y-6">
                 <div>
                     <flux:heading size="lg">Manage Tags for "{{ $selectedIssue->title }}"</flux:heading>
@@ -230,8 +230,8 @@
     @endif
 
     {{-- User Assignment Modal --}}
-    @if ($showUserModal && $selectedIssue && $selectedIssue->exists)
-        <flux:modal name="user-modal" wire:model.self="showUserModal">
+    @if ($this->isModalOpen('assignees') && $selectedIssue && $selectedIssue->exists)
+        <flux:modal name="user-modal" wire:model="modals.assignees">
             <div class="space-y-6">
                 <div>
                     <flux:heading size="lg">Assign Users to "{{ $selectedIssue->title }}"</flux:heading>
@@ -289,8 +289,8 @@
     @endif
 
     {{-- Create Issue Modal --}}
-    @if ($showCreateIssueModal)
-        <flux:modal name="create-issue-modal" wire:model.self="showCreateIssueModal">
+    @if ($this->isModalOpen('create'))
+        <flux:modal name="create-issue-modal" wire:model="modals.create">
             <div class="space-y-6">
                 <div>
                     <flux:heading size="lg">Create New Issue</flux:heading>
@@ -357,8 +357,8 @@
     @endif
 
     {{-- Edit Issue Modal --}}
-    @if ($showEditIssueModal && $selectedIssue)
-        <flux:modal name="edit-issue-modal" wire:model.self="showEditIssueModal">
+    @if ($this->isModalOpen('edit') && $selectedIssue)
+        <flux:modal name="edit-issue-modal" wire:model="modals.edit">
             <div class="space-y-6">
                 <div>
                     <flux:heading size="lg">Edit Issue: "{{ $selectedIssue->title }}"</flux:heading>

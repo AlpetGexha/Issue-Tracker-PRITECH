@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Livewire\Project;
 
+use App\Livewire\Concerns\WithModalActions;
 use App\Livewire\Forms\ProjectForm;
 use App\Models\Project;
 use Exception;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
@@ -20,14 +22,10 @@ use Livewire\WithPagination;
 #[Lazy]
 final class ProjectList extends Component
 {
-    use AuthorizesRequests;
-    use WithPagination;
+    use AuthorizesRequests, WithModalActions, WithPagination;
 
     public string $search = '';
 
-    // Modal states
-    public bool $showCreateModal = false;
-    public bool $showEditModal = false;
     public ?Project $selectedProject = null;
 
     public ProjectForm $createForm;
@@ -52,16 +50,16 @@ final class ProjectList extends Component
     public function openCreateModal(): void
     {
         $this->createForm->reset();
-        $this->showCreateModal = true;
+        $this->openModal('create');
 
-        if (auth()->id()) {
-            $this->createForm->selectedOwners = [auth()->id()];
+        if (Auth::id()) {
+            $this->createForm->selectedOwners = [Auth::id()];
         }
     }
 
     public function closeCreateModal(): void
     {
-        $this->showCreateModal = false;
+        $this->closeModal('create');
         $this->createForm->reset();
     }
 
@@ -70,12 +68,12 @@ final class ProjectList extends Component
         $project = Project::findOrFail($projectId);
         $this->selectedProject = $project;
         $this->editForm->setProject($project);
-        $this->showEditModal = true;
+        $this->openModal('edit');
     }
 
     public function closeEditModal(): void
     {
-        $this->showEditModal = false;
+        $this->closeModal('edit');
         $this->selectedProject = null;
         $this->editForm->reset();
     }
@@ -144,18 +142,18 @@ final class ProjectList extends Component
     public function render()
     {
         $projects = Project::query()
-            ->search($this->search)
+            ->where('name', 'like', "%{$this->search}%")
+            ->orWhere('description', 'like', "%{$this->search}%")
             ->with('owners')
             ->withCount('issues')
             ->latest()
             ->paginate(12);
 
-        // Search owners only if modals are open
-        $createUsers = $this->showCreateModal
+        $createUsers = $this->isModalOpen('create')
             ? $this->createForm->searchAvailableOwners()
             : collect();
 
-        $editUsers = $this->showEditModal
+        $editUsers = $this->isModalOpen('edit')
             ? $this->editForm->searchAvailableOwners()
             : collect();
 

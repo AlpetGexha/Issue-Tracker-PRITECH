@@ -118,7 +118,7 @@
     @endif
 
     {{-- Create Tag Modal --}}
-    <flux:modal wire:model.self="showCreateModal" name="create-tag">
+    <flux:modal wire:model="modals.create" name="create-tag">
         <form wire:submit="createTag" class="space-y-6">
             <div>
                 <flux:heading size="lg">Create New Tag</flux:heading>
@@ -165,7 +165,7 @@
     </flux:modal>
 
     {{-- Edit Tag Modal --}}
-    <flux:modal wire:model.self="showEditModal" name="edit-tag">
+    <flux:modal wire:model="modals.edit" name="edit-tag">
         <form wire:submit="updateTag" class="space-y-6">
             <div>
                 <flux:heading size="lg">Edit Tag</flux:heading>
