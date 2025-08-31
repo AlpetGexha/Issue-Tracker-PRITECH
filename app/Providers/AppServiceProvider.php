@@ -29,7 +29,7 @@ final class AppServiceProvider extends ServiceProvider
         $this->configurateModels();
         $this->configurateCommands();
         $this->configurateURL();
-        // $this->configuratePulse();
+        $this->configuratePulse();
         $this->configSuperAdmin();
     }
 
