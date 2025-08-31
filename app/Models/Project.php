@@ -14,11 +14,18 @@ class Project extends Model
     /** @use HasFactory<\Database\Factories\ProjectFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'description',
+        'start_date',
+        'deadline',
+    ];
+
     protected function casts(): array
     {
         return [
-            'start_date' => 'date',
-            'deadline' => 'date',
+            'start_date' => 'datetime',
+            'deadline' => 'datetime',
         ];
     }
 

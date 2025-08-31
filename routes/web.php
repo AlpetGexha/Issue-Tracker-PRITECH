@@ -1,5 +1,7 @@
 <?php
 
+use App\Livewire\Project\ProjectDetail;
+use App\Livewire\Project\ProjectList;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -22,7 +24,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 });
 
-Route::view('/projects', 'project')->name('project.index');
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/projects', ProjectList::class)->name('project.index');
+    Route::get('/projects/{project}', ProjectDetail::class)->name('project.detail');
+});
 
 require __DIR__.'/auth.php';

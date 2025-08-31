@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\ProjectPriority;
 use App\Enums\ProjectStatus;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,6 +24,43 @@ class Issue extends Model
             'status' => ProjectStatus::class,
             'priority' => ProjectPriority::class,
         ];
+    }
+
+    #[Scope]
+    public function search(Builder $query, ?string $search): void
+    {
+        $query->when($search, function ($q, $search) {
+            $q->where(function ($subQuery) use ($search) {
+                $subQuery->where('title', 'like', "%{$search}%")
+                         ->orWhere('description', 'like', "%{$search}%");
+            });
+        });
+    }
+
+    #[Scope]
+    public function status(Builder $query, ?string $status): void
+    {
+        $query->when($status, function ($q, $status) {
+            $q->where('status', $status);
+        });
+    }
+
+    #[Scope]
+    public function priority(Builder $query, ?string $priority): void
+    {
+        $query->when($priority, function ($q, $priority) {
+            $q->where('priority', $priority);
+        });
+    }
+
+    #[Scope]
+    public function tag(Builder $query, ?string $tagId): void
+    {
+        $query->when($tagId, function ($q, $tagId) {
+            $q->whereHas('tags', function ($tagQuery) use ($tagId) {
+                $tagQuery->where('tags.id', $tagId);
+            });
+        });
     }
 
     public function project(): BelongsTo
