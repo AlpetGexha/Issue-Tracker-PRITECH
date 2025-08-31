@@ -30,7 +30,6 @@ A modern, full-featured Issue Tracker built with Laravel 12 and Livewire 3 that 
 
 ![Filamentphp](screenshots/filament-5-tags.png)
 
-
 ## Installation
 
 ```bash
@@ -40,3 +39,10 @@ php artisan key:generate
 php artisan migrate --seed
 npm run build
 ```
+
+## User
+
+- Email: <user@example.com>
+- Password: password
+
+user@example.com:password
