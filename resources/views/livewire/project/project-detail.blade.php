@@ -75,7 +75,12 @@
             <div wire:key="issue-{{ $issue->id }}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-start justify-between">
                     <div class="flex-1">
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $issue->title }}</h3>
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                            <a href="{{ route('issues.detail', $issue) }}"
+                               class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
+                                {{ $issue->title }}
+                            </a>
+                        </h3>
                         <p class="mt-1 text-gray-600 dark:text-gray-400">{{ $issue->description }}</p>
 
                         {{-- Issue Meta --}}
