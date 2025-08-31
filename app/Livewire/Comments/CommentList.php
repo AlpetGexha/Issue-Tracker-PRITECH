@@ -9,9 +9,12 @@ use App\Models\Issue;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 final class CommentList extends Component
 {
+    use WithPagination;
+
     public Issue $issue;
     public string $newComment = '';
 
@@ -34,13 +37,10 @@ final class CommentList extends Component
 
         $this->newComment = '';
 
-        session()->flash('success', 'Comment added successfully!');
-    }
+        // Reset to first page to show the new comment
+        $this->resetPage();
 
-    #[On('comment-added')]
-    public function refreshComments(): void
-    {
-        $this->issue->load('comments.user');
+        session()->flash('success', 'Comment added successfully!');
     }
 
     public function deleteComment(Comment $comment): void
@@ -52,13 +52,16 @@ final class CommentList extends Component
         }
 
         $comment->delete();
-        session()->flash('success', 'Comment deleted successfully!');
-        $this->refreshComments();
+
+        // No need to manually refresh - pagination will handle it
     }
 
     public function render()
     {
-        $comments = $this->issue->comments()->with('user')->latest()->get();
+        $comments = $this->issue->comments()
+                ->with('user')
+                ->latest()
+                ->paginate(10);
 
         return view('livewire.comments.comment-list', compact('comments'));
     }

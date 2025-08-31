@@ -33,6 +33,13 @@
 
     {{-- Comments List --}}
     <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+        {{-- Comments Header --}}
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-gray-900 dark:text-white">
+                Comments ({{ $comments->total() }})
+            </h3>
+        </div>
+
         <div class="space-y-4">
             @forelse ($comments as $comment)
                 <div class="flex space-x-3">
@@ -73,5 +80,12 @@
                 </p>
             @endforelse
         </div>
+
+        {{-- Pagination Links --}}
+        @if ($comments->hasPages())
+            <div class="mt-6">
+                {{ $comments->links() }}
+            </div>
+        @endif
     </div>
 </div>
