@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Comments;
 
 use App\Models\Comment;
@@ -8,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class CommentList extends Component
+final class CommentList extends Component
 {
     public Issue $issue;
     public string $newComment = '';
@@ -45,6 +47,7 @@ class CommentList extends Component
     {
         if ($comment->user_id !== Auth::id()) {
             session()->flash('error', 'You can only delete your own comments.');
+
             return;
         }
 

@@ -5,7 +5,7 @@
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Tags Management</h1>
             <p class="text-gray-600 dark:text-gray-400">Manage tags for organizing issues</p>
         </div>
-        
+
         <flux:button wire:click="openCreateModal" variant="primary">
             <flux:icon icon="plus" class="size-4 mr-1" />
             Create Tag
@@ -14,7 +14,7 @@
 
     {{-- Search --}}
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-        <flux:input 
+        <flux:input
             wire:model.live.debounce.300ms="search"
             placeholder="Search tags..."
             class="max-w-md"
@@ -22,7 +22,7 @@
     </div>
 
     {{-- Tags Table --}}
-    @if($tags->count() > 0)
+    @if ($tags->count() > 0)
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-700">
@@ -45,7 +45,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    @foreach($tags as $tag)
+                    @foreach ($tags as $tag)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
@@ -69,18 +69,18 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end space-x-2">
-                                    <flux:button 
+                                    <flux:button
                                         wire:click="openEditModal({{ $tag->id }})"
-                                        variant="subtle" 
+                                        variant="subtle"
                                         size="sm"
                                     >
-                                        <flux:icon icon="pencil" class="size-4" />
+                                        <flux:icon icon="pencil-square" class="size-4" />
                                     </flux:button>
-                                    
-                                    <flux:button 
+
+                                    <flux:button
                                         wire:click="deleteTag({{ $tag->id }})"
                                         wire:confirm="Are you sure you want to delete this tag? This action cannot be undone."
-                                        variant="danger" 
+                                        variant="danger"
                                         size="sm"
                                     >
                                         <flux:icon icon="trash" class="size-4" />
@@ -92,7 +92,7 @@
                 </tbody>
             </table>
         </div>
-        
+
         {{-- Pagination --}}
         <div class="mt-6">
             {{ $tags->links() }}
@@ -102,13 +102,13 @@
             <flux:icon icon="tag" class="size-12 text-gray-400 mx-auto mb-4" />
             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No tags found</h3>
             <p class="text-gray-600 dark:text-gray-400 mb-4">
-                @if($search)
+                @if ($search)
                     No tags match your search criteria.
                 @else
                     Get started by creating your first tag.
                 @endif
             </p>
-            @if(!$search)
+            @if (!$search)
                 <flux:button wire:click="openCreateModal" variant="primary">
                     <flux:icon icon="plus" class="size-4 mr-1" />
                     Create Your First Tag
@@ -135,8 +135,8 @@
                 <flux:field>
                     <flux:label>Color</flux:label>
                     <div class="flex items-center space-x-3">
-                        <input 
-                            type="color" 
+                        <input
+                            type="color"
                             wire:model.live="color"
                             class="w-12 h-10 rounded border border-gray-300 dark:border-gray-600"
                         />
@@ -182,8 +182,8 @@
                 <flux:field>
                     <flux:label>Color</flux:label>
                     <div class="flex items-center space-x-3">
-                        <input 
-                            type="color" 
+                        <input
+                            type="color"
                             wire:model.live="editColor"
                             class="w-12 h-10 rounded border border-gray-300 dark:border-gray-600"
                         />

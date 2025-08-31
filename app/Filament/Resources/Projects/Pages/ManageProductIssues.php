@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Projects\Pages;
 
 use App\Filament\Resources\Projects\ProjectResource;
@@ -8,7 +10,7 @@ use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRelatedRecords;
 use Filament\Tables\Table;
 
-class ManageProductIssues extends ManageRelatedRecords
+final class ManageProductIssues extends ManageRelatedRecords
 {
     protected static string $resource = ProjectResource::class;
 

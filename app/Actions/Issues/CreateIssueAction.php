@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Issues;
 
 use App\Models\Issue;
 use App\Models\Project;
 use Illuminate\Support\Facades\DB;
 
-class CreateIssueAction
+final class CreateIssueAction
 {
     public function execute(Project $project, array $data): Issue
     {

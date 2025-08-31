@@ -36,7 +36,7 @@
             {{-- Status Filter --}}
             <select wire:model.live="statusFilter" class="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <option value="">All Statuses</option>
-                @foreach($statuses as $status)
+                @foreach ($statuses as $status)
                     <option value="{{ $status->value }}">{{ ucfirst(str_replace('_', ' ', $status->value)) }}</option>
                 @endforeach
             </select>
@@ -44,7 +44,7 @@
             {{-- Priority Filter --}}
             <select wire:model.live="priorityFilter" class="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <option value="">All Priorities</option>
-                @foreach($priorities as $priority)
+                @foreach ($priorities as $priority)
                     <option value="{{ $priority->value }}">{{ ucfirst($priority->value) }}</option>
                 @endforeach
             </select>
@@ -52,13 +52,13 @@
             {{-- Tag Filter --}}
             <select wire:model.live="tagFilter" class="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <option value="">All Tags</option>
-                @foreach($tags as $tag)
+                @foreach ($tags as $tag)
                     <option value="{{ $tag->id }}">{{ $tag->name }}</option>
                 @endforeach
             </select>
 
             {{-- Clear Filters --}}
-            @if($search || $statusFilter || $priorityFilter || $tagFilter)
+            @if ($search || $statusFilter || $priorityFilter || $tagFilter)
                 <button
                     wire:click="$set('search', ''); $set('statusFilter', ''); $set('priorityFilter', ''); $set('tagFilter', '')"
                     class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
@@ -71,7 +71,7 @@
 
     {{-- Issues List --}}
     <div class="space-y-4">
-        @forelse($issues as $issue)
+        @forelse ($issues as $issue)
             <div wire:key="issue-{{ $issue->id }}" class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-700">
                 <div class="flex items-start justify-between">
                     <div class="flex-1">
@@ -87,8 +87,8 @@
                         <div class="mt-3 flex flex-wrap gap-2">
                             {{-- Status Badge --}}
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                @if($issue->status === \App\Enums\ProjectStatus::Open) bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                @elseif($issue->status === \App\Enums\ProjectStatus::InProgress) bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
+                                @if ($issue->status === \App\Enums\ProjectStatus::Open) bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif ($issue->status === \App\Enums\ProjectStatus::InProgress) bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
                                 @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
                                 @endif">
                                 {{ ucfirst(str_replace('_', ' ', $issue->status->value)) }}
@@ -96,15 +96,15 @@
 
                             {{-- Priority Badge --}}
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                @if($issue->priority === \App\Enums\ProjectPriority::Low) bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
-                                @elseif($issue->priority === \App\Enums\ProjectPriority::Medium) bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200
+                                @if ($issue->priority === \App\Enums\ProjectPriority::Low) bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200
+                                @elseif ($issue->priority === \App\Enums\ProjectPriority::Medium) bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200
                                 @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
                                 @endif">
                                 {{ ucfirst($issue->priority->value) }} Priority
                             </span>
 
                             {{-- Due Date --}}
-                            @if($issue->due_date)
+                            @if ($issue->due_date)
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
                                     Due: {{ $issue->due_date->format('M d, Y') }}
                                 </span>
@@ -112,9 +112,9 @@
                         </div>
 
                         {{-- Tags --}}
-                        @if($issue->tags->count() > 0)
+                        @if ($issue->tags->count() > 0)
                             <div class="mt-2 flex flex-wrap gap-1">
-                                @foreach($issue->tags as $tag)
+                                @foreach ($issue->tags as $tag)
                                     <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
                                         {{ $tag->name }}
                                     </span>
@@ -123,9 +123,9 @@
                         @endif
 
                         {{-- Assigned Users --}}
-                        @if($issue->users->count() > 0)
+                        @if ($issue->users->count() > 0)
                             <div class="mt-2 flex flex-wrap gap-1">
-                                @foreach($issue->users as $user)
+                                @foreach ($issue->users as $user)
                                     <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
                                         👤 {{ $user->name }}
                                     </span>
@@ -160,7 +160,7 @@
         @empty
             <div class="text-center py-12">
                 <div class="text-gray-500 dark:text-gray-400">
-                    @if($search || $statusFilter || $priorityFilter || $tagFilter)
+                    @if ($search || $statusFilter || $priorityFilter || $tagFilter)
                         No issues found matching your filters.
                     @else
                         This project doesn't have any issues yet.
@@ -171,14 +171,14 @@
     </div>
 
     {{-- Pagination --}}
-    @if($issues->hasPages())
+    @if ($issues->hasPages())
         <div class="mt-6">
             {{ $issues->links() }}
         </div>
     @endif
 
     {{-- Tag Management Modal --}}
-    @if($showTagModal && $selectedIssue && $selectedIssue->exists)
+    @if ($showTagModal && $selectedIssue && $selectedIssue->exists)
         <flux:modal name="tag-modal" wire:model.self="showTagModal">
             <div class="space-y-6">
                 <div>
@@ -187,7 +187,7 @@
 
                 {{-- Tags List --}}
                 <div class="space-y-3 max-h-60 overflow-y-auto">
-                    @foreach($tags as $tag)
+                    @foreach ($tags as $tag)
                         <label class="flex items-center space-x-3 p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700">
                             <input
                                 type="checkbox"
@@ -198,7 +198,7 @@
                             <div class="flex-1">
                                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $tag->name }}</span>
                             </div>
-                            @if($selectedIssue && in_array($tag->id, $selectedIssue->tags->pluck('id')->toArray()))
+                            @if ($selectedIssue && in_array($tag->id, $selectedIssue->tags->pluck('id')->toArray()))
                                 <span class="text-xs text-green-600 dark:text-green-400 font-medium">Currently Tagged</span>
                             @endif
                         </label>
@@ -219,7 +219,7 @@
     @endif
 
     {{-- User Assignment Modal --}}
-    @if($showUserModal && $selectedIssue && $selectedIssue->exists)
+    @if ($showUserModal && $selectedIssue && $selectedIssue->exists)
         <flux:modal name="user-modal" wire:model.self="showUserModal">
             <div class="space-y-6">
                 <div>
@@ -237,7 +237,7 @@
 
                 {{-- Users List --}}
                 <div class="space-y-3 max-h-60 overflow-y-auto">
-                    @forelse($users as $user)
+                    @forelse ($users as $user)
                         <label class="flex items-center space-x-3 p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700">
                             <input
                                 type="checkbox"
@@ -249,13 +249,13 @@
                                 <div class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $user->name }}</div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">{{ $user->email }}</div>
                             </div>
-                            @if($selectedIssue && in_array($user->id, $selectedIssue->users->pluck('id')->toArray()))
+                            @if ($selectedIssue && in_array($user->id, $selectedIssue->users->pluck('id')->toArray()))
                                 <span class="text-xs text-green-600 dark:text-green-400 font-medium">Currently Assigned</span>
                             @endif
                         </label>
                     @empty
                         <div class="text-center py-4 text-gray-500 dark:text-gray-400">
-                            @if($userSearch)
+                            @if ($userSearch)
                                 No users found matching "{{ $userSearch }}"
                             @else
                                 No users available
@@ -278,7 +278,7 @@
     @endif
 
     {{-- Create Issue Modal --}}
-    @if($showCreateIssueModal)
+    @if ($showCreateIssueModal)
         <flux:modal name="create-issue-modal" wire:model.self="showCreateIssueModal">
             <div class="space-y-6">
                 <div>
@@ -346,7 +346,7 @@
     @endif
 
     {{-- Edit Issue Modal --}}
-    @if($showEditIssueModal && $selectedIssue)
+    @if ($showEditIssueModal && $selectedIssue)
         <flux:modal name="edit-issue-modal" wire:model.self="showEditIssueModal">
             <div class="space-y-6">
                 <div>

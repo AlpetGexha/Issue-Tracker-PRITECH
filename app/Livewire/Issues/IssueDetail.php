@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Issues;
 
-use App\Models\Issue;
-use App\Enums\ProjectStatus;
 use App\Enums\ProjectPriority;
+use App\Enums\ProjectStatus;
+use App\Models\Issue;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('components.layouts.app')]
-class IssueDetail extends Component
+final class IssueDetail extends Component
 {
     public Issue $issue;
 
@@ -37,7 +39,7 @@ class IssueDetail extends Component
         $this->editDescription = $this->issue->description ?? '';
         $this->editStatus = $this->issue->status->value;
         $this->editPriority = $this->issue->priority->value;
-        $this->editDueDate = $this->issue->due_date ? date('Y-m-d', strtotime($this->issue->due_date)) : '';
+        $this->editDueDate = $this->issue->due_date ? $this->issue->due_date->format('Y-m-d') : '';
         $this->showEditModal = true;
     }
 

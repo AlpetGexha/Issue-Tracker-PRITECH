@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Tags;
 
 use App\Models\Tag;
@@ -11,7 +13,7 @@ use Livewire\WithPagination;
 
 #[Layout('components.layouts.app')]
 #[Title('Tags Management')]
-class TagList extends Component
+final class TagList extends Component
 {
     use WithPagination;
 
@@ -81,8 +83,9 @@ class TagList extends Component
 
     public function updateTag(): void
     {
-        if (!$this->selectedTag) {
+        if (! $this->selectedTag) {
             $this->closeEditModal();
+
             return;
         }
 
@@ -106,18 +109,6 @@ class TagList extends Component
         $this->dispatch('notify', message: 'Tag deleted successfully!', type: 'success');
     }
 
-    private function resetCreateForm(): void
-    {
-        $this->name = '';
-        $this->color = '#3B82F6';
-    }
-
-    private function resetEditForm(): void
-    {
-        $this->editName = '';
-        $this->editColor = '#3B82F6';
-    }
-
     public function render()
     {
         $tags = Tag::query()
@@ -129,5 +120,17 @@ class TagList extends Component
             ->paginate(15);
 
         return view('livewire.tags.tag-list', compact('tags'));
+    }
+
+    private function resetCreateForm(): void
+    {
+        $this->name = '';
+        $this->color = '#3B82F6';
+    }
+
+    private function resetEditForm(): void
+    {
+        $this->editName = '';
+        $this->editColor = '#3B82F6';
     }
 }

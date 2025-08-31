@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Issues;
 
 use App\Models\Issue;
 use Illuminate\Support\Facades\DB;
 
-class UpdateIssueAction
+final class UpdateIssueAction
 {
     public function execute(Issue $issue, array $data): Issue
     {

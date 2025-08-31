@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\Project;
-use App\Models\Issue;
-use App\Models\Tag;
 use App\Models\Comment;
+use App\Models\Issue;
+use App\Models\Project;
+use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+final class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.

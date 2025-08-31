@@ -30,7 +30,7 @@
                     <span>Project: <span class="font-medium">{{ $issue->project->name }}</span></span>
                     <span>•</span>
                     <span>Created {{ $issue->created_at->diffForHumans() }}</span>
-                    @if($issue->due_date)
+                    @if ($issue->due_date)
                         <span>•</span>
                         <span>Due {{ $issue->due_date->format('M j, Y') }}</span>
                     @endif
@@ -47,10 +47,10 @@
                 </div>
 
                 {{-- Tags --}}
-                @if($issue->tags->count() > 0)
+                @if ($issue->tags->count() > 0)
                     <div class="flex items-center space-x-2 mb-4">
                         <span class="text-sm text-gray-600 dark:text-gray-400">Tags:</span>
-                        @foreach($issue->tags as $tag)
+                        @foreach ($issue->tags as $tag)
                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium text-white"
                                   style="background-color: {{ $tag->color }}">
                                 {{ $tag->name }}
@@ -60,17 +60,17 @@
                 @endif
 
                 {{-- Assigned Users --}}
-                @if($issue->users->count() > 0)
+                @if ($issue->users->count() > 0)
                     <div class="flex items-center space-x-2">
                         <span class="text-sm text-gray-600 dark:text-gray-400">Assigned to:</span>
                         <div class="flex -space-x-1">
-                            @foreach($issue->users->take(3) as $user)
+                            @foreach ($issue->users->take(3) as $user)
                                  <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium text-white"
                                   >
                                 {{ $user->name }}
                             </span>
                             @endforeach
-                            @if($issue->users->count() > 3)
+                            @if ($issue->users->count() > 3)
                                 <span class="text-xs text-gray-500 ml-2">+{{ $issue->users->count() - 3 }} more</span>
                             @endif
                         </div>

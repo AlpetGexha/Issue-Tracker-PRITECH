@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Project;
 
 use App\Enums\ProjectPriority;
@@ -7,6 +9,7 @@ use App\Enums\ProjectStatus;
 use App\Models\Issue;
 use App\Models\Project;
 use App\Models\Tag;
+use Exception;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
@@ -16,9 +19,9 @@ use Livewire\WithPagination;
 
 #[Layout('components.layouts.app')]
 #[Title('Project Details')]
-class ProjectDetail extends Component
+final class ProjectDetail extends Component
 {
-    use WithPagination, AuthorizesRequests;
+    use AuthorizesRequests, WithPagination;
 
     public Project $project;
     public string $search = '';
@@ -77,7 +80,7 @@ class ProjectDetail extends Component
 
     public function openTagModal(Issue $issue): void
     {
-        if (!$issue->exists) {
+        if (! $issue->exists) {
             return;
         }
 
@@ -95,8 +98,9 @@ class ProjectDetail extends Component
 
     public function updateTags(): void
     {
-        if (!$this->selectedIssue || !$this->selectedIssue->exists) {
+        if (! $this->selectedIssue || ! $this->selectedIssue->exists) {
             $this->closeTagModal();
+
             return;
         }
 
@@ -105,7 +109,7 @@ class ProjectDetail extends Component
             $this->selectedIssue->tags()->sync($this->selectedTags);
             $this->closeTagModal();
             $this->dispatch('tags-updated', issueId: $issueId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->closeTagModal();
             // Optionally log the error or show a user message
         }
@@ -113,7 +117,7 @@ class ProjectDetail extends Component
 
     public function openUserModal(Issue $issue): void
     {
-        if (!$issue->exists) {
+        if (! $issue->exists) {
             return;
         }
 
@@ -133,8 +137,9 @@ class ProjectDetail extends Component
 
     public function updateUsers(): void
     {
-        if (!$this->selectedIssue || !$this->selectedIssue->exists) {
+        if (! $this->selectedIssue || ! $this->selectedIssue->exists) {
             $this->closeUserModal();
+
             return;
         }
 
@@ -143,7 +148,7 @@ class ProjectDetail extends Component
             $this->selectedIssue->users()->sync($this->selectedUsers);
             $this->closeUserModal();
             $this->dispatch('users-updated', issueId: $issueId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->closeUserModal();
             // Optionally log the error or show a user message
         }
@@ -194,7 +199,7 @@ class ProjectDetail extends Component
 
     public function openEditIssueModal(Issue $issue): void
     {
-        if (!$issue->exists) {
+        if (! $issue->exists) {
             return;
         }
 
@@ -225,8 +230,9 @@ class ProjectDetail extends Component
 
     public function updateIssue(): void
     {
-        if (!$this->selectedIssue || !$this->selectedIssue->exists) {
+        if (! $this->selectedIssue || ! $this->selectedIssue->exists) {
             $this->closeEditIssueModal();
+
             return;
         }
 
@@ -250,7 +256,7 @@ class ProjectDetail extends Component
 
             $this->closeEditIssueModal();
             $this->dispatch('issue-updated', issueId: $issueId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->closeEditIssueModal();
             // Optionally log the error or show a user message
         }

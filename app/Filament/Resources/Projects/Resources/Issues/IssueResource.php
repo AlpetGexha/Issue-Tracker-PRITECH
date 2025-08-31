@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Projects\Resources\Issues;
 
 use App\Filament\Resources\Projects\ProjectResource;
@@ -14,7 +16,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class IssueResource extends Resource
+final class IssueResource extends Resource
 {
     protected static ?string $model = Issue::class;
 
@@ -44,7 +46,7 @@ class IssueResource extends Resource
     public static function getPages(): array
     {
         return [
-            'view' => \App\Filament\Resources\Projects\Resources\Issues\Pages\ViewIssue::route('/{record}'),
+            'view' => Pages\ViewIssue::route('/{record}'),
             // 'create' => CreateIssue::route('/create'),
             // 'edit' => EditIssue::route('/{record}/edit'),
         ];

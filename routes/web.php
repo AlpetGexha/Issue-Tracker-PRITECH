@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Livewire\Issues\IssueDetail;
 use App\Livewire\Issues\MyIssues;
 use App\Livewire\Project\ProjectDetail;
@@ -18,7 +20,6 @@ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
@@ -28,13 +29,13 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/projects', ProjectList::class)->name('project.index');
-    Route::get('/projects/{project}', ProjectDetail::class)->name('project.detail');
+    Route::get('projects', ProjectList::class)->name('project.index');
+    Route::get('projects/{project}', ProjectDetail::class)->name('project.detail');
 
-    Route::get('/issues/{issue}', IssueDetail::class)->name('issues.detail');
-    Route::get('/my-issues', MyIssues::class)->name('issues.my');
+    Route::get('issues/{issue}', IssueDetail::class)->name('issues.detail');
+    Route::get('my-issues', MyIssues::class)->name('issues.my');
 
-    Route::get('/tags', TagList::class)->name('tags.index');
+    Route::get('tags', TagList::class)->name('tags.index');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

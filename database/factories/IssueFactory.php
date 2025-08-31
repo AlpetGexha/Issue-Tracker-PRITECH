@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
 use App\Models\Project;
@@ -8,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Issue>
  */
-class IssueFactory extends Factory
+final class IssueFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -41,14 +43,12 @@ class IssueFactory extends Factory
         ]);
     }
 
-
     public function closed(): static
     {
         return $this->state(fn (array $attributes) => [
             'status' => 'closed',
         ]);
     }
-
 
     public function highPriority(): static
     {
@@ -66,12 +66,10 @@ class IssueFactory extends Factory
         ]);
     }
 
-
     public function withComments(int $count = 3): static
     {
         return $this->hasComments($count);
     }
-
 
     public function withTags(int $count = 2): static
     {

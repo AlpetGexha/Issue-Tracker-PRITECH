@@ -1,24 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Project;
 
 use App\Models\Project;
 use App\Models\User;
+use Exception;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Title;
-use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 #[Layout('components.layouts.app')]
 #[Title('Project List')]
-class ProjectList extends Component
+final class ProjectList extends Component
 {
-    use WithPagination, AuthorizesRequests;
+    use AuthorizesRequests, WithPagination;
 
     public string $search = '';
 
@@ -118,15 +120,16 @@ class ProjectList extends Component
                 $this->dispatch('project-created', name: $project->name);
                 $this->dispatch('notify', message: 'Project created successfully!', type: 'success');
             });
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->dispatch('notify', message: 'Failed to create project. Please try again.', type: 'error');
         }
     }
 
     public function updateProject(): void
     {
-        if (!$this->selectedProject) {
+        if (! $this->selectedProject) {
             $this->closeEditModal();
+
             return;
         }
 
@@ -156,7 +159,7 @@ class ProjectList extends Component
                 $this->dispatch('project-updated', name: $this->selectedProject->name);
                 $this->dispatch('notify', message: 'Project updated successfully!', type: 'success');
             });
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->dispatch('notify', message: 'Failed to update project. Please try again.' . $e->getMessage(), type: 'error');
         }
     }
@@ -168,26 +171,6 @@ class ProjectList extends Component
         $project->delete();
 
         $this->dispatch('project-deleted', name: $project->name);
-    }
-
-    private function resetCreateForm(): void
-    {
-        $this->name = '';
-        $this->description = '';
-        $this->startDate = '';
-        $this->deadline = '';
-        $this->selectedOwners = [];
-        $this->ownerSearch = '';
-    }
-
-    private function resetEditForm(): void
-    {
-        $this->editName = '';
-        $this->editDescription = '';
-        $this->editStartDate = '';
-        $this->editDeadline = '';
-        $this->editSelectedOwners = [];
-        $this->editOwnerSearch = '';
     }
 
     public function render()
@@ -211,14 +194,6 @@ class ProjectList extends Component
         return view('livewire.project.project-list', compact('projects', 'createUsers', 'editUsers'));
     }
 
-    private function getSearchableUsers(string $search)
-    {
-        return User::when($search, function ($query, $search) {
-            $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
-        })->orderBy('name')->get();
-    }
-
     public function removeOwner($userId): void
     {
         $this->selectedOwners = array_values(array_diff($this->selectedOwners, [$userId]));
@@ -231,15 +206,43 @@ class ProjectList extends Component
 
     public function addOwner($userId): void
     {
-        if (!in_array($userId, $this->selectedOwners)) {
+        if (! in_array($userId, $this->selectedOwners)) {
             $this->selectedOwners[] = $userId;
         }
     }
 
     public function addEditOwner($userId): void
     {
-        if (!in_array($userId, $this->editSelectedOwners)) {
+        if (! in_array($userId, $this->editSelectedOwners)) {
             $this->editSelectedOwners[] = $userId;
         }
+    }
+
+    private function resetCreateForm(): void
+    {
+        $this->name = '';
+        $this->description = '';
+        $this->startDate = '';
+        $this->deadline = '';
+        $this->selectedOwners = [];
+        $this->ownerSearch = '';
+    }
+
+    private function resetEditForm(): void
+    {
+        $this->editName = '';
+        $this->editDescription = '';
+        $this->editStartDate = '';
+        $this->editDeadline = '';
+        $this->editSelectedOwners = [];
+        $this->editOwnerSearch = '';
+    }
+
+    private function getSearchableUsers(string $search)
+    {
+        return User::when($search, function ($query, $search) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%");
+        })->orderBy('name')->get();
     }
 }

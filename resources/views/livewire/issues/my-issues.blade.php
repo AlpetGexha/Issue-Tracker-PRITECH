@@ -39,9 +39,9 @@
     </div>
 
     {{-- Issues Grid --}}
-    @if($issues->count() > 0)
+    @if ($issues->count() > 0)
         <div class="grid gap-6">
-            @foreach($issues as $issue)
+            @foreach ($issues as $issue)
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-md transition-shadow">
                     <div class="p-6">
                         <div class="flex items-start justify-between">
@@ -63,7 +63,7 @@
                                         Project: <span class="font-medium">{{ $issue->project->name }}</span>
                                     </span>
 
-                                    @if($issue->due_date)
+                                    @if ($issue->due_date)
                                         <span class="text-gray-500 dark:text-gray-400">
                                             Due: {{ $issue->due_date->format('M j, Y') }}
                                         </span>
@@ -71,15 +71,15 @@
                                 </div>
 
                                 {{-- Tags --}}
-                                @if($issue->tags->count() > 0)
+                                @if ($issue->tags->count() > 0)
                                     <div class="flex items-center space-x-2 mt-3">
-                                        @foreach($issue->tags->take(3) as $tag)
+                                        @foreach ($issue->tags->take(3) as $tag)
                                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium text-white"
                                                   style="background-color: {{ $tag->color }}">
                                                 {{ $tag->name }}
                                             </span>
                                         @endforeach
-                                        @if($issue->tags->count() > 3)
+                                        @if ($issue->tags->count() > 3)
                                             <span class="text-xs text-gray-500">+{{ $issue->tags->count() - 3 }} more</span>
                                         @endif
                                     </div>
@@ -116,7 +116,7 @@
             <flux:icon icon="document-text" class="size-12 text-gray-400 mx-auto mb-4" />
             <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No issues found</h3>
             <p class="text-gray-600 dark:text-gray-400">
-                @if($search || $statusFilter || $priorityFilter)
+                @if ($search || $statusFilter || $priorityFilter)
                     Try adjusting your filters to see more results.
                 @else
                     You don't have any issues assigned to you yet.

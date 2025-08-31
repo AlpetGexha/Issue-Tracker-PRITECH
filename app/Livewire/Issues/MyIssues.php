@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Issues;
 
 use App\Models\Issue;
@@ -12,7 +14,7 @@ use Livewire\WithPagination;
 
 #[Layout('components.layouts.app')]
 #[Title('My Issues')]
-class MyIssues extends Component
+final class MyIssues extends Component
 {
     use WithPagination;
 
@@ -50,7 +52,7 @@ class MyIssues extends Component
             ->when($this->search, function ($query, $search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('title', 'like', "%{$search}%")
-                      ->orWhere('description', 'like', "%{$search}%");
+                        ->orWhere('description', 'like', "%{$search}%");
                 });
             })
             ->when($this->statusFilter, function ($query, $status) {

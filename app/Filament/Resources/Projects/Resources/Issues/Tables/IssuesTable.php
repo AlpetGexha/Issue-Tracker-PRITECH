@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Projects\Resources\Issues\Tables;
 
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
-use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -13,9 +14,8 @@ use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Collection;
 
-class IssuesTable
+final class IssuesTable
 {
     public static function configure(Table $table): Table
     {
@@ -27,9 +27,9 @@ class IssuesTable
                 // ->searchable()
                 // ->wrap(),
                 TextColumn::make('status')
-                ->badge(),
+                    ->badge(),
                 TextColumn::make('priority')
-                ->badge(),
+                    ->badge(),
                 TextColumn::make('users.name')
                     ->label('Assigned Users')
                     ->badge()

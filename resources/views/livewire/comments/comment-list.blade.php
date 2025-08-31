@@ -34,7 +34,7 @@
     {{-- Comments List --}}
     <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
         <div class="space-y-4">
-            @forelse($comments as $comment)
+            @forelse ($comments as $comment)
                 <div class="flex space-x-3">
                     <flux:avatar size="sm" :alt="$comment->user->name" />
 
@@ -49,7 +49,7 @@
                                 </span>
                             </div>
 
-                            @if($comment->user_id === auth()->id())
+                            @if ($comment->user_id === auth()->id())
                                 <flux:button
                                     wire:click="deleteComment({{ $comment->id }})"
                                     wire:confirm="Are you sure you want to delete this comment?"

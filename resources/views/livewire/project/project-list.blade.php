@@ -29,7 +29,7 @@
                                 {{ $project->name }}
                             </a>
                         </h3>
-                        @if($project->description)
+                        @if ($project->description)
                             <p class="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-2">
                                 {{ $project->description }}
                             </p>
@@ -62,7 +62,7 @@
                         <flux:icon.document-text class="w-4 h-4" />
                         {{ $project->issues_count }} {{ Str::plural('issue', $project->issues_count) }}
                     </span>
-                    @if($project->deadline)
+                    @if ($project->deadline)
                         <span class="flex items-center gap-1">
                             <flux:icon.calendar class="w-4 h-4" />
                             {{ $project->deadline->format('M j, Y') }}
@@ -71,18 +71,18 @@
                 </div>
 
                 <!-- Project Owners -->
-                @if($project->owners->isNotEmpty())
+                @if ($project->owners->isNotEmpty())
                     <div class="mb-4">
                         <h4 class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
                             Project Owners
                         </h4>
                         <div class="flex flex-wrap gap-1">
-                            @foreach($project->owners->take(3) as $owner)
+                            @foreach ($project->owners->take(3) as $owner)
                                 <flux:badge variant="lime" size="sm">
                                     {{ $owner->name }}
                                 </flux:badge>
                             @endforeach
-                            @if($project->owners->count() > 3)
+                            @if ($project->owners->count() > 3)
                                 <flux:badge variant="gray" size="sm">
                                     +{{ $project->owners->count() - 3 }} more
                                 </flux:badge>
@@ -113,7 +113,7 @@
     </div>
 
     <!-- Pagination -->
-    @if($projects->hasPages())
+    @if ($projects->hasPages())
         <div class="mt-6">
             {{ $projects->links() }}
         </div>
@@ -166,13 +166,13 @@
                     <flux:error name="selectedOwners" />
 
                     <!-- Selected Owners -->
-                    @if(!empty($selectedOwners))
+                    @if (!empty($selectedOwners))
                         <div class="mt-2 space-y-1">
-                            @foreach($selectedOwners as $userId)
+                            @foreach ($selectedOwners as $userId)
                                 @php
                                     $user = $createUsers->firstWhere('id', $userId) ?? \App\Models\User::find($userId);
                                 @endphp
-                                @if($user)
+                                @if ($user)
                                     <div class="flex items-center justify-between bg-blue-50 dark:bg-blue-900/20 px-3 py-2 rounded-md">
                                         <span class="text-sm text-blue-700 dark:text-blue-300">{{ $user->name }}</span>
                                         <flux:button
@@ -188,10 +188,10 @@
                     @endif
 
                     <!-- User Search Results -->
-                    @if($ownerSearch && $createUsers->isNotEmpty())
+                    @if ($ownerSearch && $createUsers->isNotEmpty())
                         <div class="mt-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md">
-                            @foreach($createUsers as $user)
-                                @if(!in_array($user->id, $selectedOwners))
+                            @foreach ($createUsers as $user)
+                                @if (!in_array($user->id, $selectedOwners))
                                     <button
                                         type="button"
                                         wire:click="addOwner({{ $user->id }})"
@@ -266,13 +266,13 @@
                     <flux:error name="editSelectedOwners" />
 
                     <!-- Selected Owners -->
-                    @if(!empty($editSelectedOwners))
+                    @if (!empty($editSelectedOwners))
                         <div class="mt-2 space-y-1">
-                            @foreach($editSelectedOwners as $userId)
+                            @foreach ($editSelectedOwners as $userId)
                                 @php
                                     $user = $editUsers->firstWhere('id', $userId) ?? \App\Models\User::find($userId);
                                 @endphp
-                                @if($user)
+                                @if ($user)
                                     <div class="flex items-center justify-between bg-blue-50 dark:bg-blue-900/20 px-3 py-2 rounded-md">
                                         <span class="text-sm text-blue-700 dark:text-blue-300">{{ $user->name }}</span>
                                         <flux:button
@@ -288,10 +288,10 @@
                     @endif
 
                     <!-- User Search Results -->
-                    @if($editOwnerSearch && $editUsers->isNotEmpty())
+                    @if ($editOwnerSearch && $editUsers->isNotEmpty())
                         <div class="mt-2 max-h-40 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-md">
-                            @foreach($editUsers as $user)
-                                @if(!in_array($user->id, $editSelectedOwners))
+                            @foreach ($editUsers as $user)
+                                @if (!in_array($user->id, $editSelectedOwners))
                                     <button
                                         type="button"
                                         wire:click="addEditOwner({{ $user->id }})"

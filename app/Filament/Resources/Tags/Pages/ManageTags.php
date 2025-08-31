@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Tags\Pages;
 
 use App\Filament\Resources\Tags\TagResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ManageRecords;
 
-class ManageTags extends ManageRecords
+final class ManageTags extends ManageRecords
 {
     protected static string $resource = TagResource::class;
 

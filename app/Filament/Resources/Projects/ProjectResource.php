@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Projects;
 
 use App\Filament\Resources\Projects\Pages\CreateProject;
 use App\Filament\Resources\Projects\Pages\EditProject;
 use App\Filament\Resources\Projects\Pages\ListProjects;
 use App\Filament\Resources\Projects\Pages\ManageProductIssues;
-use App\Filament\Resources\Projects\Pages\ManageProductTags;
 use App\Filament\Resources\Projects\Pages\ViewProject;
 use App\Filament\Resources\Projects\RelationManagers\IssuesRelationManager;
 use App\Filament\Resources\Projects\Schemas\ProjectForm;
@@ -19,7 +20,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class ProjectResource extends Resource
+final class ProjectResource extends Resource
 {
     protected static ?string $model = Project::class;
 
@@ -55,7 +56,7 @@ class ProjectResource extends Resource
             'create' => CreateProject::route('/create'),
             'view' => ViewProject::route('/{record}'),
             'edit' => EditProject::route('/{record}/edit'),
-            'issues' => ManageProductIssues::route('/{record}/issues')
+            'issues' => ManageProductIssues::route('/{record}/issues'),
         ];
     }
 }

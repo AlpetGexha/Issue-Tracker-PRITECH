@@ -1,23 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Projects\Resources\Issues\Pages;
 
 use App\Filament\Resources\Projects\Resources\Issues\IssueResource;
-use App\Filament\Schemas\Components\CommentsList;
-use App\Enums\ProjectPriority;
-use App\Enums\ProjectStatus;
-use Filament\Resources\Pages\ViewRecord;
-use Filament\Schemas\Schema;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Components\IconEntry;
-use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\View;
-use Filament\Forms\Components\Textarea;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Textarea;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
+use Filament\Resources\Pages\ViewRecord;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 
-class ViewIssue extends ViewRecord
+final class ViewIssue extends ViewRecord
 {
     protected static string $resource = IssueResource::class;
 
@@ -61,7 +58,7 @@ class ViewIssue extends ViewRecord
                         TextEntry::make('tags')
                             ->label('Tags')
                             ->formatStateUsing(function ($record) {
-                                if (!$record->tags || $record->tags->isEmpty()) {
+                                if (! $record->tags || $record->tags->isEmpty()) {
                                     return 'No tags assigned';
                                 }
 
@@ -116,7 +113,7 @@ class ViewIssue extends ViewRecord
                                         ->maxLength(1000)
                                         ->helperText('Markdown formatting is supported')
                                         ->extraInputAttributes([
-                                            'style' => 'resize: vertical; min-height: 100px;'
+                                            'style' => 'resize: vertical; min-height: 100px;',
                                         ]),
                                 ])
                                 ->action(function (array $data): void {
@@ -141,7 +138,7 @@ class ViewIssue extends ViewRecord
                                 ->modalDescription('Share your thoughts about this issue. Your comment will be visible to all team members.')
                                 ->modalWidth('2xl'),
                         ])
-                        ->alignment('left'),
+                            ->alignment('left'),
                     ])
                     ->columnSpanFull()
                     ->collapsible()
@@ -158,17 +155,17 @@ class ViewIssue extends ViewRecord
         $hexColor = ltrim($hexColor, '#');
 
         // Convert to RGB
-        if (strlen($hexColor) === 3) {
+        if (mb_strlen($hexColor) === 3) {
             $hexColor = $hexColor[0] . $hexColor[0] . $hexColor[1] . $hexColor[1] . $hexColor[2] . $hexColor[2];
         }
 
-        if (strlen($hexColor) !== 6) {
+        if (mb_strlen($hexColor) !== 6) {
             return '#000000'; // Default to black for invalid colors
         }
 
-        $r = hexdec(substr($hexColor, 0, 2));
-        $g = hexdec(substr($hexColor, 2, 2));
-        $b = hexdec(substr($hexColor, 4, 2));
+        $r = hexdec(mb_substr($hexColor, 0, 2));
+        $g = hexdec(mb_substr($hexColor, 2, 2));
+        $b = hexdec(mb_substr($hexColor, 4, 2));
 
         // Calculate luminance
         $luminance = (0.299 * $r + 0.587 * $g + 0.114 * $b) / 255;

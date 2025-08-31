@@ -1,7 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Projects\Tables;
-use Filament\Actions\Exports\ExportColumn;
+
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -10,7 +12,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class ProjectsTable
+final class ProjectsTable
 {
     public static function configure(Table $table): Table
     {
@@ -20,10 +22,10 @@ class ProjectsTable
             )
             ->columns([
                 TextColumn::make('name')
-                ->searchable(),
+                    ->searchable(),
                 TextColumn::make('description')
-                ->wrap()
-                ->searchable(),
+                    ->wrap()
+                    ->searchable(),
                 TextColumn::make('issues_count')
                     ->counts('issues')
                     ->label('Issues')
