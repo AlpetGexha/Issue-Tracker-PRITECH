@@ -5,6 +5,7 @@ use App\Livewire\Project\ProjectList;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
+use App\Livewire\Tags\TagList;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,6 +28,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/projects', ProjectList::class)->name('project.index');
     Route::get('/projects/{project}', ProjectDetail::class)->name('project.detail');
+    Route::get('/tags', TagList::class)->name('tags.index');
 });
 
 require __DIR__.'/auth.php';
