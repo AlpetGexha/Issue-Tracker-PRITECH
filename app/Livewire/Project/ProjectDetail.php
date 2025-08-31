@@ -14,6 +14,7 @@ use App\Models\Tag;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
@@ -43,6 +44,24 @@ final class ProjectDetail extends Component
     // Forms
     public IssueForm $createForm;
     public IssueForm $editForm;
+
+    #[Computed(cache: true)]
+    public function statuses()
+    {
+        return ProjectStatus::cases();
+    }
+
+    #[Computed(cache: true)]
+    public function priorities()
+    {
+        return ProjectPriority::cases();
+    }
+
+    #[Computed(cache: true, seconds: 3600)] // Cache tags for 1 hour since they don't change often
+    public function tags()
+    {
+        return Tag::all();
+    }
 
     public function mount(Project $project): void
     {
@@ -101,6 +120,10 @@ final class ProjectDetail extends Component
         try {
             $issueId = $this->selectedIssue->id;
             $this->selectedIssue->tags()->sync($this->selectedTags);
+
+            // Clear the tags cache since the relationship might have changed
+            unset($this->tags);
+
             $this->closeTagModal();
             $this->notifySuccess('Issue tags updated successfully!');
             $this->dispatch('tags-updated', issueId: $issueId);
@@ -247,16 +270,17 @@ final class ProjectDetail extends Component
             ->latest()
             ->paginate(10);
 
-        $tags = Tag::all();
+        $tags = $this->tags;
 
         $users = $this->isModalOpen('assignees')
             ? User::query()
-                ->search($this->userSearch)
+                ->where('name', 'like', "%{$this->userSearch}%")
+                ->orWhere('email', 'like', "%{$this->userSearch}%")
                 ->get()
             : collect();
 
-        $statuses = ProjectStatus::cases();
-        $priorities = ProjectPriority::cases();
+        $statuses = $this->statuses;
+        $priorities = $this->priorities;
 
         return view('livewire.project.project-detail', compact('issues', 'tags', 'users', 'statuses', 'priorities'));
     }
