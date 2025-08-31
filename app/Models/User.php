@@ -13,8 +13,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-final class User extends Authenticatable
+final class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
@@ -90,6 +92,11 @@ final class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->email === 'user@example.com'; // just for testing
+    }
+
+      public function canAccessPanel(Panel $panel): bool
+    {
+        return true;
     }
 
     /**
