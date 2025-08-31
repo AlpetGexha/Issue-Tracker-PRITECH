@@ -21,18 +21,18 @@
             <div>
                 <flux:select wire:model.live="statusFilter" placeholder="All Status">
                     <option value="">All Status</option>
-                    <option value="Open">Open</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Closed">Closed</option>
+                    <option value="open">Open</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="closed">Closed</option>
                 </flux:select>
             </div>
 
             <div>
                 <flux:select wire:model.live="priorityFilter" placeholder="All Priorities">
                     <option value="">All Priorities</option>
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
                 </flux:select>
             </div>
         </div>

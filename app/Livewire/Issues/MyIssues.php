@@ -6,7 +6,6 @@ namespace App\Livewire\Issues;
 
 use App\Models\Issue;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
@@ -63,22 +62,11 @@ final class MyIssues extends Component
     public function render()
     {
         $issues = Issue::query()
-            ->whereHas('users', function ($query) {
-                $query->where('user_id', Auth::id());
-            })
             ->with(['project', 'tags', 'users'])
-            ->when($this->search, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('title', 'like', "%{$search}%")
-                        ->orWhere('description', 'like', "%{$search}%");
-                });
-            })
-            ->when($this->statusFilter, function ($query, $status) {
-                $query->where('status', $status);
-            })
-            ->when($this->priorityFilter, function ($query, $priority) {
-                $query->where('priority', $priority);
-            })
+            ->myIssue()
+            ->search($this->search)
+            ->status($this->statusFilter)
+            ->priority($this->priorityFilter)
             ->latest()
             ->paginate(10);
 

@@ -39,6 +39,14 @@ final class Issue extends Model
     }
 
     #[Scope]
+    public function myIssue(Builder $query): void
+    {
+        $query->whereHas('users', function ($query) {
+            $query->where('user_id', auth()->id());
+        });
+    }
+
+    #[Scope]
     public function priority(Builder $query, ?string $priority): void
     {
         $query->when($priority, function ($q, $priority) {
