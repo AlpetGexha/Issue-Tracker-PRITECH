@@ -48,7 +48,7 @@
                             <div class="flex-1">
                                 <div class="flex items-center space-x-3 mb-2">
                                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                        <a href="{{ route('issues.detail', $issue) }}" class="hover:text-blue-600 dark:hover:text-blue-400">
+                                        <a wire:navigate href="{{ route('issues.detail', $issue) }}" class="hover:text-blue-600 dark:hover:text-blue-400">
                                             {{ $issue->title }}
                                         </a>
                                     </h3>
