@@ -67,93 +67,102 @@
             @if ($recentIssues->count() > 0 || $recentProjects->count() > 0 || $recentComments->count() > 0)
                 <div class="space-y-6">
                     {{-- Recent Issues --}}
-                    @if ($recentIssues->count() > 0)
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Recent Issues</h3>
-                            <div class="space-y-3">
-                                @foreach ($recentIssues as $issue)
-                                    <div class="flex items-start space-x-3">
-                                        <div class="p-2 rounded-full bg-blue-100 dark:bg-blue-900/20">
-                                            <flux:icon icon="document-text" class="size-4 text-blue-600 dark:text-blue-400" />
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="text-sm font-medium text-gray-900 dark:text-white">
-                                                <a wire:navigate href="{{ route('issues.detail', $issue) }}" class="hover:text-blue-600 dark:hover:text-blue-400">
-                                                    {{ $issue->title }}
-                                                </a>
-                                            </p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                in {{ $issue->project->name }} • {{ $issue->created_at->diffForHumans() }}
-                                            </p>
-                                        </div>
-                                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                                            @if ($issue->status->value === 'open') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
-                                            @elseif ($issue->status->value === 'in_progress') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
-                                            @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
-                                            @endif">
-                                            {{ ucfirst(str_replace('_', ' ', $issue->status->value)) }}
-                                        </span>
-                                    </div>
-                                @endforeach
+                    @forelse ($recentIssues as $issue)
+                        @if ($loop->first)
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Recent Issues</h3>
+                                <div class="space-y-3">
+                        @endif
+                        <div class="flex items-start space-x-3">
+                            <div class="p-2 rounded-full bg-blue-100 dark:bg-blue-900/20">
+                                <flux:icon icon="document-text" class="size-4 text-blue-600 dark:text-blue-400" />
                             </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                                    <a wire:navigate href="{{ route('issues.detail', $issue) }}" class="hover:text-blue-600 dark:hover:text-blue-400">
+                                        {{ $issue->title }}
+                                    </a>
+                                </p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
+                                    in {{ $issue->project->name }} • {{ $issue->created_at->diffForHumans() }}
+                                </p>
+                            </div>
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+                                @if ($issue->status->value === 'open') bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200
+                                @elseif ($issue->status->value === 'in_progress') bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200
+                                @else bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200
+                                @endif">
+                                {{ ucfirst(str_replace('_', ' ', $issue->status->value)) }}
+                            </span>
                         </div>
-                    @endif
+                        @if ($loop->last)
+                                </div>
+                            </div>
+                        @endif
+                    @empty
+                    @endforelse
 
                     {{-- Recent Projects --}}
-                    @if ($recentProjects->count() > 0)
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Recent Projects</h3>
-                            <div class="space-y-3">
-                                @foreach ($recentProjects as $project)
-                                    <div class="flex items-start space-x-3">
-                                        <div class="p-2 rounded-full bg-purple-100 dark:bg-purple-900/20">
-                                            <flux:icon icon="briefcase" class="size-4 text-purple-600 dark:text-purple-400" />
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="text-sm font-medium text-gray-900 dark:text-white">
-                                                <a wire:navigate href="{{ route('project.detail', $project) }}" class="hover:text-blue-600 dark:hover:text-blue-400">
-                                                    {{ $project->name }}
-                                                </a>
-                                            </p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                {{ $project->description ? Str::limit($project->description, 50) : 'No description' }} • {{ $project->created_at->diffForHumans() }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                @endforeach
+                    @forelse ($recentProjects as $project)
+                        @if ($loop->first)
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Recent Projects</h3>
+                                <div class="space-y-3">
+                        @endif
+                        <div class="flex items-start space-x-3">
+                            <div class="p-2 rounded-full bg-purple-100 dark:bg-purple-900/20">
+                                <flux:icon icon="briefcase" class="size-4 text-purple-600 dark:text-purple-400" />
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                                    <a wire:navigate href="{{ route('project.detail', $project) }}" class="hover:text-blue-600 dark:hover:text-blue-400">
+                                        {{ $project->name }}
+                                    </a>
+                                </p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
+                                    {{ $project->description ? Str::limit($project->description, 50) : 'No description' }} • {{ $project->created_at->diffForHumans() }}
+                                </p>
                             </div>
                         </div>
-                    @endif
+                        @if ($loop->last)
+                                </div>
+                            </div>
+                        @endif
+                    @empty
+                    @endforelse
 
                     {{-- Recent Comments --}}
-                    @if ($recentComments->count() > 0)
-                        <div>
-                            <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Recent Comments</h3>
-                            <div class="space-y-3">
-                                @foreach ($recentComments as $comment)
-                                    <div class="flex items-start space-x-3">
-                                        <div class="p-2 rounded-full bg-green-100 dark:bg-green-900/20">
-                                            <flux:icon icon="chat-bubble-left" class="size-4 text-green-600 dark:text-green-400" />
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="text-sm text-gray-900 dark:text-white">
-                                                <span class="font-medium">{{ $comment->user->name }}</span> commented on
-                                                <a wire:navigate href="{{ route('issues.detail', $comment->issue) }}" class="font-medium hover:text-blue-600 dark:hover:text-blue-400">
-                                                    {{ $comment->issue->title }}
-                                                </a>
-                                            </p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                {{ Str::limit($comment->body, 80) }}
-                                            </p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                                {{ $comment->created_at->diffForHumans() }}
-                                            </p>
-                                        </div>
-                                    </div>
-                                @endforeach
+                    @forelse ($recentComments as $comment)
+                        @if ($loop->first)
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-3">Recent Comments</h3>
+                                <div class="space-y-3">
+                        @endif
+                        <div class="flex items-start space-x-3">
+                            <div class="p-2 rounded-full bg-green-100 dark:bg-green-900/20">
+                                <flux:icon icon="chat-bubble-left" class="size-4 text-green-600 dark:text-green-400" />
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm text-gray-900 dark:text-white">
+                                    <span class="font-medium">{{ $comment->user->name }}</span> commented on
+                                    <a wire:navigate href="{{ route('issues.detail', $comment->issue) }}" class="font-medium hover:text-blue-600 dark:hover:text-blue-400">
+                                        {{ $comment->issue->title }}
+                                    </a>
+                                </p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                    {{ Str::limit($comment->body, 80) }}
+                                </p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
+                                    {{ $comment->created_at->diffForHumans() }}
+                                </p>
                             </div>
                         </div>
-                    @endif
+                        @if ($loop->last)
+                                </div>
+                            </div>
+                        @endif
+                    @empty
+                    @endforelse
                 </div>
             @else
                 <div class="text-center py-8">

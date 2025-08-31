@@ -183,9 +183,6 @@ final class ProjectList extends Component
 
     public function render()
     {
-        // Simulate loading delay for demonstration (remove in production)
-        sleep(1);
-
         $projects = Project::query()
             ->search($this->search)
             ->with('owners')

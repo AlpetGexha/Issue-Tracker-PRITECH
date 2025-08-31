@@ -25,38 +25,31 @@ final class Dashboard extends Component
 
     public function render()
     {
-        // Simulate loading delay for demonstration (remove in production)
-        sleep(1);
-
         $user = Auth::user();
 
-        // Get recent activities
         $recentIssues = Issue::with(['project', 'users'])
             ->whereHas('users', fn ($query) => $query->where('user_id', $user->id))
-            ->orWhereHas('project', fn ($query) => $query->where('user_id', $user->id))
+            ->orWhereHas('project.users', fn ($query) => $query->where('user_id', $user->id))
             ->latest()
             ->limit(5)
             ->get();
 
-        $recentProjects = Project::with('owners')
-            ->where('user_id', $user->id)
-            ->orWhereHas('owners', fn ($query) => $query->where('user_id', $user->id))
+        $recentProjects = Project::with('users')
+            ->whereHas('users', fn ($query) => $query->where('user_id', $user->id))
             ->latest()
             ->limit(3)
             ->get();
 
         $recentComments = Comment::with(['issue.project', 'user'])
             ->where('user_id', $user->id)
-            ->orWhereHas('issue.project', fn ($query) => $query->where('user_id', $user->id))
+            ->orWhereHas('issue.project.users', fn ($query) => $query->where('user_id', $user->id))
             ->orWhereHas('issue.users', fn ($query) => $query->where('user_id', $user->id))
             ->latest()
             ->limit(5)
             ->get();
 
-        // Get stats
         $stats = [
-            'total_projects' => Project::where('user_id', $user->id)
-                ->orWhereHas('owners', fn ($query) => $query->where('user_id', $user->id))
+            'total_projects' => Project::whereHas('users', fn ($query) => $query->where('user_id', $user->id))
                 ->count(),
             'my_issues' => Issue::whereHas('users', fn ($query) => $query->where('user_id', $user->id))
                 ->count(),

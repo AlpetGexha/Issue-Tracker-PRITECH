@@ -289,9 +289,6 @@ final class ProjectDetail extends Component
 
     public function render()
     {
-        // Simulate loading delay for demonstration (remove in production)
-        sleep(1);
-
         $issues = $this->project->issues()
             ->with(['tags', 'users'])
             ->search($this->search)
