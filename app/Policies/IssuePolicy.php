@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\Project;
+use App\Models\Issue;
 use App\Models\User;
 
-final class ProjectPolicy
+final class IssuePolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -20,9 +20,10 @@ final class ProjectPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Project $project): bool
+    public function view(User $user, Issue $issue): bool
     {
-        return true;
+        // Users can view issues if they are assigned to the issue or are project members/owners
+        return $issue->users->contains($user) || $user->id === $issue->project->user_id;
     }
 
     /**
@@ -36,23 +37,25 @@ final class ProjectPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Project $project): bool
+    public function update(User $user, Issue $issue): bool
     {
-        return $project->isOwnedBy($user);
+        // Users can update issues if they are assigned to the issue or own the project
+        return $issue->users->contains($user) || $user->id === $issue->project->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Project $project): bool
+    public function delete(User $user, Issue $issue): bool
     {
-        return $project->isOwnedBy($user);
+        // Only project owners can delete issues
+        return $user->id === $issue->project->user_id;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Project $project): bool
+    public function restore(User $user, Issue $issue): bool
     {
         return true;
     }
@@ -60,7 +63,7 @@ final class ProjectPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Project $project): bool
+    public function forceDelete(User $user, Issue $issue): bool
     {
         return true;
     }

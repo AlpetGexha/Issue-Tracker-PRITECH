@@ -76,7 +76,7 @@
                 <div class="flex items-start justify-between">
                     <div class="flex-1">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                            <a href="{{ route('issues.detail', $issue) }}"
+                            <a wire:navigate href="{{ route('issues.detail', $issue) }}"
                                class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200">
                                 {{ $issue->title }}
                             </a>
@@ -136,12 +136,14 @@
 
                     {{-- Actions --}}
                     <div class="ml-4 flex flex-col gap-2">
-                        <button
-                            wire:click="openEditIssueModal({{ $issue->id }})"
-                            class="px-3 py-1 text-sm text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-200 border border-indigo-300 rounded hover:bg-indigo-50 dark:border-indigo-600 dark:hover:bg-indigo-900"
-                        >
-                            Edit Issue
-                        </button>
+                        @can('update', $issue)
+                            <button
+                                wire:click="openEditIssueModal({{ $issue->id }})"
+                                class="px-3 py-1 text-sm text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-200 border border-indigo-300 rounded hover:bg-indigo-50 dark:border-indigo-600 dark:hover:bg-indigo-900"
+                            >
+                                Edit Issue
+                            </button>
+                        @endcan
                         <button
                             wire:click="openTagModal({{ $issue->id }})"
                             class="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 border border-blue-300 rounded hover:bg-blue-50 dark:border-blue-600 dark:hover:bg-blue-900"
@@ -154,6 +156,15 @@
                         >
                             Assign Users
                         </button>
+                        @can('delete', $issue)
+                            <button
+                                wire:click="deleteIssue({{ $issue->id }})"
+                                wire:confirm="Are you sure you want to delete this issue? This action cannot be undone."
+                                class="px-3 py-1 text-sm text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200 border border-red-300 rounded hover:bg-red-50 dark:border-red-600 dark:hover:bg-red-900"
+                            >
+                                Delete Issue
+                            </button>
+                        @endcan
                     </div>
                 </div>
             </div>

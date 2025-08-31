@@ -9,6 +9,7 @@ use App\Enums\ProjectStatus;
 use App\Models\Issue;
 use App\Models\Project;
 use App\Models\Tag;
+use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Attributes\Layout;
@@ -111,7 +112,6 @@ final class ProjectDetail extends Component
             $this->dispatch('tags-updated', issueId: $issueId);
         } catch (Exception $e) {
             $this->closeTagModal();
-            // Optionally log the error or show a user message
         }
     }
 
@@ -228,6 +228,15 @@ final class ProjectDetail extends Component
         $this->editIssueDueDate = '';
     }
 
+    public function deleteIssue(Issue $issue): void
+    {
+        $this->authorize('delete', $issue);
+
+        $issue->delete();
+
+        $this->dispatch('issue-deleted');
+    }
+
     public function updateIssue(): void
     {
         if (! $this->selectedIssue || ! $this->selectedIssue->exists) {
@@ -286,7 +295,7 @@ final class ProjectDetail extends Component
 
         // Only search users when the user modal is open to improve performance
         $users = $this->showUserModal
-            ? \App\Models\User::query()
+            ? User::query()
                 ->search($this->userSearch)
                 ->get()
             : collect();

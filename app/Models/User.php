@@ -17,7 +17,8 @@ use Illuminate\Support\Str;
 final class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -84,6 +85,11 @@ final class User extends Authenticatable
     public function collaboratedProjects(): BelongsToMany
     {
         return $this->projects()->wherePivot('role', 'collaborator');
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->email === 'user@example.com'; // just for testing
     }
 
     /**

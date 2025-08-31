@@ -20,7 +20,8 @@ use Livewire\WithPagination;
 #[Title('Project List')]
 final class ProjectList extends Component
 {
-    use AuthorizesRequests, WithPagination;
+    use AuthorizesRequests;
+    use WithPagination;
 
     public string $search = '';
 
@@ -180,7 +181,7 @@ final class ProjectList extends Component
             ->with('owners')
             ->withCount('issues')
             ->latest()
-            ->paginate(4);
+            ->paginate(12);
 
         // Get users for owner selection (only when modals are open for performance)
         $createUsers = $this->showCreateModal
@@ -240,9 +241,10 @@ final class ProjectList extends Component
 
     private function getSearchableUsers(string $search)
     {
-        return User::when($search, function ($query, $search) {
-            $query->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
-        })->orderBy('name')->get();
+        return User::query()
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            })->orderBy('name')->get();
     }
 }

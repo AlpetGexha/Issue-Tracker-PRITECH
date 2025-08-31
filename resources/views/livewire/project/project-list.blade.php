@@ -24,7 +24,7 @@
                 <div class="flex justify-between items-start mb-4">
                     <div class="flex-1">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                            <a href="{{ route('project.detail', $project->id) }}"
+                            <a wire:navigate href="{{ route('project.detail', $project->id) }}"
                                class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                                 {{ $project->name }}
                             </a>
@@ -90,15 +90,6 @@
                         </div>
                     </div>
                 @endif
-
-                <!-- View Details Button -->
-                <flux:button
-                    href="{{ route('project.detail', $project->id) }}"
-                    variant="ghost"
-                    size="sm"
-                    class="w-full">
-                    View Details
-                </flux:button>
             </div>
         @empty
             <div class="col-span-full text-center py-12">

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Issues;
 
 use App\Models\Issue;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -16,7 +17,7 @@ use Livewire\WithPagination;
 #[Title('My Issues')]
 final class MyIssues extends Component
 {
-    use WithPagination;
+    use AuthorizesRequests, WithPagination;
 
     #[Url]
     public string $search = '';
@@ -40,6 +41,16 @@ final class MyIssues extends Component
     public function updatedPriorityFilter(): void
     {
         $this->resetPage();
+    }
+
+    public function deleteIssue(Issue $issue): void
+    {
+        $this->authorize('delete', $issue);
+
+        $issueTitle = $issue->title;
+        $issue->delete();
+
+        session()->flash('success', "Issue '{$issueTitle}' deleted successfully!");
     }
 
     public function render()

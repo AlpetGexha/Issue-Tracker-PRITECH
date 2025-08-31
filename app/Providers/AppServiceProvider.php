@@ -30,6 +30,14 @@ final class AppServiceProvider extends ServiceProvider
         $this->configurateCommands();
         $this->configurateURL();
         // $this->configuratePulse();
+        $this->configSuperAdmin();
+    }
+
+    private function configSuperAdmin(): void
+    {
+        Gate::before(function ($user, $ability) {
+            return $user->isAdmin() ? true : null;
+        });
     }
 
     private function configuratePulse(): void

@@ -79,14 +79,29 @@
             </div>
 
             <div class="flex space-x-2">
-                <flux:button variant="subtle" size="sm" wire:click="openEditModal">
-                    <flux:icon icon="pencil-square" class="size-4" />
-                    Edit
-                </flux:button>
+                @can('update', $issue)
+                    <flux:button variant="subtle" size="sm" wire:click="openEditModal">
+                        <flux:icon icon="pencil-square" class="size-4" />
+                        Edit
+                    </flux:button>
+                @endcan
+
                 <flux:button variant="subtle" size="sm" wire:click="shareIssue">
                     <flux:icon icon="share" class="size-4" />
                     Share
                 </flux:button>
+
+                @can('delete', $issue)
+                    <flux:button
+                        variant="danger"
+                        size="sm"
+                        wire:click="deleteIssue"
+                        wire:confirm="Are you sure you want to delete this issue? This action cannot be undone."
+                    >
+                        <flux:icon icon="trash" class="size-4" />
+                        Delete
+                    </flux:button>
+                @endcan
             </div>
         </div>
     </div>

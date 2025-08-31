@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\Project;
+use App\Models\Comment;
 use App\Models\User;
 
-final class ProjectPolicy
+final class CommentPolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -20,7 +20,7 @@ final class ProjectPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Project $project): bool
+    public function view(User $user, Comment $comment): bool
     {
         return true;
     }
@@ -36,23 +36,23 @@ final class ProjectPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Project $project): bool
+    public function update(User $user, Comment $comment): bool
     {
-        return $project->isOwnedBy($user);
+        return (int) $comment->user_id === (int) $user->id;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Project $project): bool
+    public function delete(User $user, Comment $comment): bool
     {
-        return $project->isOwnedBy($user);
+        return (int) $comment->user_id === (int) $user->id;
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Project $project): bool
+    public function restore(User $user, Comment $comment): bool
     {
         return true;
     }
@@ -60,7 +60,7 @@ final class ProjectPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Project $project): bool
+    public function forceDelete(User $user, Comment $comment): bool
     {
         return true;
     }

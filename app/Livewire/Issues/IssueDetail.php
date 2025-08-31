@@ -7,12 +7,15 @@ namespace App\Livewire\Issues;
 use App\Enums\ProjectPriority;
 use App\Enums\ProjectStatus;
 use App\Models\Issue;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('components.layouts.app')]
 final class IssueDetail extends Component
 {
+    use AuthorizesRequests;
+
     public Issue $issue;
 
     // Edit Modal Properties
@@ -83,6 +86,21 @@ final class IssueDetail extends Component
         $this->dispatch('copy-to-clipboard', text: $url);
 
         session()->flash('success', 'Issue URL copied to clipboard!');
+    }
+
+    public function deleteIssue()
+    {
+        $this->authorize('delete', $this->issue);
+
+        $projectId = $this->issue->project_id;
+        $issueTitle = $this->issue->title;
+
+        $this->issue->delete();
+
+        session()->flash('success', "Issue '{$issueTitle}' deleted successfully!");
+
+        // Redirect to project detail page
+        return redirect()->route('projects.detail', $projectId);
     }
 
     public function render()

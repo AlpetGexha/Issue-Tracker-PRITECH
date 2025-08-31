@@ -56,7 +56,7 @@
                                 </span>
                             </div>
 
-                            @if ($comment->user_id === auth()->id())
+                            @can('delete', $comment)
                                 <flux:button
                                     wire:click="deleteComment({{ $comment->id }})"
                                     wire:confirm="Are you sure you want to delete this comment?"
@@ -66,7 +66,7 @@
                                 >
                                     <flux:icon icon="trash" class="size-3" />
                                 </flux:button>
-                            @endif
+                            @endcan
                         </div>
 
                         <div class="text-gray-700 dark:text-gray-300">
