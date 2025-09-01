@@ -65,6 +65,13 @@ final class IssueForm extends Form
         $this->projectId = $project->id;
     }
 
+    public function ensureProjectIsSet(Project $project): void
+    {
+        if ($this->projectId === 0) {
+            $this->projectId = $project->id;
+        }
+    }
+
     public function store(): Issue
     {
         $this->validate();
@@ -88,9 +95,16 @@ final class IssueForm extends Form
             $issue->users()->attach($this->selectedAssignees);
         }
 
-        $this->reset();
+        $this->resetForm();
 
         return $issue;
+    }
+
+    public function resetForm(): void
+    {
+        $preservedProjectId = $this->projectId;
+        $this->reset();
+        $this->projectId = $preservedProjectId;
     }
 
     public function update(): Issue

@@ -22,7 +22,9 @@ use Livewire\WithPagination;
 #[Lazy]
 final class ProjectList extends Component
 {
-    use AuthorizesRequests, WithModalActions, WithPagination;
+    use AuthorizesRequests;
+    use WithModalActions;
+    use WithPagination;
 
     public string $search = '';
 
@@ -80,15 +82,11 @@ final class ProjectList extends Component
 
     public function createProject(): void
     {
-        try {
-            $project = $this->createForm->store();
+        $project = $this->createForm->store();
 
-            $this->closeCreateModal();
-            $this->dispatch('project-created', name: $project->name);
-            $this->dispatch('notify', message: 'Project created successfully!', type: 'success');
-        } catch (Exception $e) {
-            $this->dispatch('notify', message: 'Failed to create project. Please try again.', type: 'error');
-        }
+        $this->closeCreateModal();
+        $this->dispatch('project-created', name: $project->name);
+        $this->notifySuccess('Project created successfully!');
     }
 
     public function updateProject(): void
@@ -104,9 +102,9 @@ final class ProjectList extends Component
 
             $this->closeEditModal();
             $this->dispatch('project-updated', name: $project->name);
-            $this->dispatch('notify', message: 'Project updated successfully!', type: 'success');
+            $this->notifySuccess('Project updated successfully!');
         } catch (Exception $e) {
-            $this->dispatch('notify', message: 'Failed to update project. ' . $e->getMessage(), type: 'error');
+            $this->notifyError('Failed to update project. Please try again.' . $e->getMessage());
         }
     }
 

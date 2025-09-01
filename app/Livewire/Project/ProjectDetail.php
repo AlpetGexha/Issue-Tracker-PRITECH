@@ -57,7 +57,7 @@ final class ProjectDetail extends Component
         return ProjectPriority::cases();
     }
 
-    #[Computed(cache: true, seconds: 3600)] // Cache tags for 1 hour since they don't change often
+    #[Computed(cache: true, seconds: 3600)]
     public function tags()
     {
         return Tag::all();
@@ -67,7 +67,6 @@ final class ProjectDetail extends Component
     {
         $this->project = $project;
 
-        // Set project for the create form
         $this->createForm->setProject($project);
     }
 
@@ -96,8 +95,14 @@ final class ProjectDetail extends Component
         $this->resetPage();
     }
 
-    public function openTagModal(Issue $issue): void
+    public function openTagModal(int $issueId): void
     {
+        $issue = Issue::find($issueId);
+
+        if (! $issue) {
+            return;
+        }
+
         $this->selectedIssue = $issue;
         $this->selectedTags = $issue->tags->pluck('id')->toArray();
 
@@ -121,7 +126,6 @@ final class ProjectDetail extends Component
             $issueId = $this->selectedIssue->id;
             $this->selectedIssue->tags()->sync($this->selectedTags);
 
-            // Clear the tags cache since the relationship might have changed
             unset($this->tags);
 
             $this->closeTagModal();
@@ -133,9 +137,11 @@ final class ProjectDetail extends Component
         }
     }
 
-    public function openUserModal(Issue $issue): void
+    public function openUserModal(int $issueId): void
     {
-        if (! $issue->exists) {
+        $issue = Issue::find($issueId);
+
+        if (! $issue || ! $issue->exists) {
             return;
         }
 
@@ -183,24 +189,36 @@ final class ProjectDetail extends Component
         $this->closeModal('create');
     }
 
-    public function resetCreateIssueForm(): void
+    public function resetCreateForm(): void
     {
-        $this->createForm->reset();
+        $this->createForm->resetForm();
         $this->createForm->setProject($this->project);
     }
 
     public function createIssue(): void
     {
-        $issue = $this->createForm->store();
+        try {
+            // Ensure project is set before validation
+            $this->createForm->setProject($this->project);
 
-        $this->closeCreateIssueModal();
-        $this->notifySuccess('Issue created successfully!');
-        $this->dispatch('issue-created', issueId: $issue->id);
+            $issue = $this->createForm->store();
+
+            $this->closeCreateIssueModal();
+            $this->notifySuccess('Issue created successfully!');
+            $this->dispatch('issue-created', issueId: $issue->id);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Don't close modal on validation errors - let Livewire handle displaying them
+            throw $e;
+        } catch (Exception $e) {
+            $this->notifyError('Failed to create issue. Please try again.');
+        }
     }
 
-    public function openEditIssueModal(Issue $issue): void
+    public function openEditIssueModal(int $issueId): void
     {
-        if (! $issue->exists) {
+        $issue = Issue::find($issueId);
+
+        if (! $issue || ! $issue->exists) {
             return;
         }
 
@@ -245,8 +263,11 @@ final class ProjectDetail extends Component
             $this->closeEditIssueModal();
             $this->notifySuccess('Issue updated successfully!');
             $this->dispatch('issue-updated', issueId: $issueId);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Don't close modal on validation errors - let form show field errors
+            throw $e;
         } catch (Exception $e) {
-            $this->closeEditIssueModal();
+            $this->notifyError('Failed to update issue. Please try again.');
         }
     }
 

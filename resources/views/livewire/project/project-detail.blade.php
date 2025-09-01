@@ -138,20 +138,20 @@
                     <div class="ml-4 flex flex-col gap-2">
                         @can('update', $issue)
                             <button
-                                wire:click="openEditIssueModal({{ $issue }})"
+                                wire:click="openEditIssueModal({{ $issue->id }})"
                                 class="px-3 py-1 text-sm text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-200 border border-indigo-300 rounded hover:bg-indigo-50 dark:border-indigo-600 dark:hover:bg-indigo-900"
                             >
                                 Edit Issue
                             </button>
                         @endcan
                         <button
-                            wire:click="openTagModal({{ $issue }})"
+                            wire:click="openTagModal({{ $issue->id }})"
                             class="px-3 py-1 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200 border border-blue-300 rounded hover:bg-blue-50 dark:border-blue-600 dark:hover:bg-blue-900"
                         >
                             Manage Tags
                         </button>
                         <button
-                            wire:click="openUserModal({{ $issue }})"
+                            wire:click="openUserModal({{ $issue->id }})"
                             class="px-3 py-1 text-sm text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200 border border-green-300 rounded hover:bg-green-50 dark:border-green-600 dark:hover:bg-green-900"
                         >
                             Assign Users
@@ -293,54 +293,65 @@
         <flux:modal name="create-issue-modal" wire:model="modals.create">
             <div class="space-y-6">
                 <div>
+
                     <flux:heading size="lg">Create New Issue</flux:heading>
-                </div>
 
                 <div class="space-y-4">
-                    <div>
+                    {{-- Hidden field to ensure project ID is always set --}}
+                    <input type="hidden" wire:model="createForm.projectId" value="{{ $project->id }}">
+                    <flux:error name="createForm.projectId" />
+
+                    <flux:field>
+                        <flux:label>Title</flux:label>
                         <flux:input
                             wire:model="createForm.title"
-                            label="Title"
                             placeholder="Enter issue title..."
                             required
                         />
-                    </div>
+                        <flux:error name="createForm.title" />
+                    </flux:field>
 
-                    <div>
+                    <flux:field>
+                        <flux:label>Description</flux:label>
                         <flux:textarea
                             wire:model="createForm.description"
-                            label="Description"
                             placeholder="Describe the issue..."
                             rows="4"
                             required
                         />
-                    </div>
+                        <flux:error name="createForm.description" />
+                    </flux:field>
 
                     <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <flux:select wire:model="createForm.status" label="Status">
+                        <flux:field>
+                            <flux:label>Status</flux:label>
+                            <flux:select wire:model="createForm.status">
                                 <option value="open">Open</option>
                                 <option value="in_progress">In Progress</option>
                                 <option value="closed">Closed</option>
                             </flux:select>
-                        </div>
+                            <flux:error name="createForm.status" />
+                        </flux:field>
 
-                        <div>
-                            <flux:select wire:model="createForm.priority" label="Priority">
+                        <flux:field>
+                            <flux:label>Priority</flux:label>
+                            <flux:select wire:model="createForm.priority">
                                 <option value="low">Low</option>
                                 <option value="medium">Medium</option>
                                 <option value="high">High</option>
                             </flux:select>
-                        </div>
+                            <flux:error name="createForm.priority" />
+                        </flux:field>
                     </div>
 
-                    <div>
+                    <flux:field>
+                        <flux:label>Due Date</flux:label>
                         <flux:input
                             wire:model="createForm.dueDate"
-                            label="Due Date"
                             type="date"
                         />
-                    </div>
+                        <flux:error name="createForm.dueDate" />
+                    </flux:field>
                 </div>
 
                 <div class="flex gap-2">
@@ -365,50 +376,57 @@
                 </div>
 
                 <div class="space-y-4">
-                    <div>
+                    <flux:field>
+                        <flux:label>Title</flux:label>
                         <flux:input
                             wire:model="editForm.title"
-                            label="Title"
                             placeholder="Issue title..."
                             required
                         />
-                    </div>
+                        <flux:error name="editForm.title" />
+                    </flux:field>
 
-                    <div>
+                    <flux:field>
+                        <flux:label>Description</flux:label>
                         <flux:textarea
                             wire:model="editForm.description"
-                            label="Description"
                             placeholder="Describe the issue..."
                             rows="4"
                             required
                         />
-                    </div>
+                        <flux:error name="editForm.description" />
+                    </flux:field>
 
                     <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <flux:select wire:model="editForm.status" label="Status">
+                        <flux:field>
+                            <flux:label>Status</flux:label>
+                            <flux:select wire:model="editForm.status">
                                 <option value="open">Open</option>
                                 <option value="in_progress">In Progress</option>
                                 <option value="closed">Closed</option>
                             </flux:select>
-                        </div>
+                            <flux:error name="editForm.status" />
+                        </flux:field>
 
-                        <div>
-                            <flux:select wire:model="editForm.priority" label="Priority">
+                        <flux:field>
+                            <flux:label>Priority</flux:label>
+                            <flux:select wire:model="editForm.priority">
                                 <option value="low">Low</option>
                                 <option value="medium">Medium</option>
                                 <option value="high">High</option>
                             </flux:select>
-                        </div>
+                            <flux:error name="editForm.priority" />
+                        </flux:field>
                     </div>
 
-                    <div>
+                    <flux:field>
+                        <flux:label>Due Date</flux:label>
                         <flux:input
                             wire:model="editForm.dueDate"
-                            label="Due Date"
                             type="date"
                         />
-                    </div>
+                        <flux:error name="editForm.dueDate" />
+                    </flux:field>
                 </div>
 
                 <div class="flex gap-2">
